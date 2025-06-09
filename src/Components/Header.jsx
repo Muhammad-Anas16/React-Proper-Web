@@ -12,11 +12,14 @@ import MenuItem from "@mui/material/MenuItem";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SunnyIcon from "@mui/icons-material/Sunny";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Redux/Theme/ThemeSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../Firebase/Firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { setIsLogin } from "../Redux/IsLogin/IsLoginSlice";
 
 // Array of menu items with paths
 const pages = [
@@ -38,31 +41,18 @@ const pages = [
 // };
 
 function Header() {
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [userLogin, setUserLogin] = useState();
 
   const mode = useSelector((state) => state.theme.mode);
-  const dispatch = useDispatch();
-
-  // console.log(mode);
+  const userLogin = useSelector((state) => state.IsLogin.IsLogin); // Cheking Login
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const uid = user.uid;
-      setUserLogin(user);
-      // ...
-    } else {
-      console.log("user is Not Login");
-    }
-  });
-
-  console.log(userLogin);
 
   return (
     <AppBar
@@ -72,6 +62,7 @@ function Header() {
         boxShadow: 1,
       }}
     >
+      <ToastContainer />
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* Desktop Logo */}
@@ -222,7 +213,27 @@ function Header() {
               <MenuItem onClick={handleCloseUserMenu}>
                 <Typography textAlign="center">Profile</Typography>
               </MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>
+              <MenuItem
+                onClick={() => {
+                  handleCloseUserMenu();
+                  signOut(auth)
+                    .then(() => {
+                      toast.success("✅ Sign-out successful", {
+                        position: "top-center",
+                        autoClose: 2500,
+                        theme: "colored",
+                      });
+                      navigate("/");
+                    })
+                    .catch((error) => {
+                      toast.error(error.message || "An error happened!", {
+                        position: "top-center",
+                        autoClose: 2500,
+                        theme: "colored",
+                      });
+                    });
+                }}
+              >
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>
               {/*  */}

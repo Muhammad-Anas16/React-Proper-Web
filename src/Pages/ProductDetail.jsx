@@ -1,8 +1,11 @@
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 
 const ProductDetail = () => {
   const { id } = useParams();
+
+  const navigate = useNavigate();
+  const userLogin = useSelector((state) => state.IsLogin.IsLogin);
 
   const products = useSelector((state) => state.products.products);
 
@@ -56,12 +59,18 @@ const ProductDetail = () => {
               <span className="title-font font-medium text-2xl text-gray-900">
                 ${currentData?.price}.00
               </span>
-              <Link
-                to={`/${id}/billing`}
+              <button
+                onClick={() => {
+                  if (userLogin == false) {
+                    navigate("/auth");
+                  } else {
+                    navigate(`/${id}/billing`);
+                  }
+                }}
                 className="ml-auto text-white bg-[#DB4444] border-0 py-2 px-6 focus:outline-none rounded cursor-pointer text-center capitalize"
               >
                 Buy now
-              </Link>
+              </button>
             </div>
           </div>
         </div>

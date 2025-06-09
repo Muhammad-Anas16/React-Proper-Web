@@ -13,14 +13,28 @@ import ProductDetail from "./Pages/ProductDetail";
 import BillingDetail from "./Pages/BillingDetail";
 import Product from "./Pages/Product";
 import ForgotPassword from "./Pages/ForgetPassword";
+import { auth } from "./Firebase/Firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { setIsLogin } from "./Redux/IsLogin/IsLoginSlice";
+import { useDispatch } from "react-redux";
 
 const App = () => {
-
   Shop();
-  
+
+  let dispatch = useDispatch();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      dispatch(setIsLogin(uid));
+      // ...
+    } else {
+      console.log("user is Not Login");
+    }
+  });
+
   return (
     <>
-    
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />

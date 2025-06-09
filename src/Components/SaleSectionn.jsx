@@ -1,10 +1,36 @@
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
-import { Pagination } from "@mui/material";
+import { useNavigate } from "react-router";
+import { db } from "../Firebase/Firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 const SaleSection = () => {
+  const navigate = useNavigate();
+
   const products = useSelector((state) => state.products.products).slice(0, 5);
+  const userLogin = useSelector((state) => state.IsLogin.IsLogin);
+
+  // console.log("Checking UserLogin in salesSection", userLogin);
+
+  const HandleAddToCard = async (image, title, price) => {
+    if (!userLogin) {
+      navigate("/auth");
+      return;
+    }
+
+    try {
+      const docRef = await addDoc(collection(db, "carts"), {
+        image,
+        title,
+        price,
+        uid: userLogin,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
 
   return (
     <section className="text-gray-600 body-font border border-gray-300">
@@ -28,9 +54,18 @@ const SaleSection = () => {
                   className="object-cover w-full h-full p-2"
                   src={item?.images[0]}
                 />
-                <button className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {/* ----------------- wanna make condition! ----------------- */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent default link navigation
+                    e.stopPropagation();
+                    HandleAddToCard(item?.images[0], item?.title, item?.price);
+                  }}
+                  className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                >
                   <LocalGroceryStoreOutlinedIcon fontSize="small" /> Add to Cart
                 </button>
+                {/* ----------------- wanna make condition! ----------------- */}
               </div>
               <div className="mt-1 text-center">
                 <h2 className="text-gray-900 text-xs font-medium truncate">
