@@ -29,6 +29,8 @@ const App = () => {
       dispatch(setIsLogin(uid));
       // ...
     } else {
+      dispatch(setIsLogin(null));
+
       console.log("user is Not Login");
     }
   });
@@ -41,8 +43,6 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/product" element={<Product />} />
-        {/* <Route path=":id" element={<ProductDetail />} /> */}
-        {/* <Route path=":id/:name" element={<BillingDetail />} /> */}
         <Route path="/:id">
           <Route index element={<ProductDetail />} />
           <Route path="billing" element={<BillingDetail />} />

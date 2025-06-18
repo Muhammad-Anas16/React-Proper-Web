@@ -18,8 +18,8 @@ import { toggleTheme } from "../Redux/Theme/ThemeSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../Firebase/Firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { setIsLogin } from "../Redux/IsLogin/IsLoginSlice";
+import { signOut } from "firebase/auth";
+// import { setIsLogin } from "../Redux/IsLogin/IsLoginSlice";
 
 // Array of menu items with paths
 const pages = [
@@ -28,31 +28,41 @@ const pages = [
   { name: "Contact", path: "/contact" },
 ];
 
-// const modalStyle = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 400,
-//   bgcolor: "background.paper",
-//   border: "2px solid #000",
-//   boxShadow: 24,
-//   p: 4,
-// };
-
 function Header() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const mode = useSelector((state) => state.theme.mode);
-  const userLogin = useSelector((state) => state.IsLogin.IsLogin); // Cheking Login
+  const userLogin = useSelector((state) => state.IsLogin.IsLogin);
+  const userRole = useSelector((state) => state.User?.role || "user"); // Optional role
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
+
+  const handleLogout = () => {
+    handleCloseUserMenu();
+    signOut(auth)
+      .then(() => {
+        toast.success("✅ Sign-out successful", {
+          position: "top-center",
+          autoClose: 2500,
+          theme: "colored",
+          onClose: () => navigate("/"),
+        });
+      })
+      .catch((error) => {
+        toast.error(error.message || "An error happened!", {
+          position: "top-center",
+          autoClose: 2500,
+          theme: "colored",
+        });
+      });
+  };
 
   return (
     <AppBar
@@ -158,7 +168,7 @@ function Header() {
             ))}
           </Box>
 
-          {/* Icons */}
+          {/* Right Side Icons */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <IconButton onClick={() => dispatch(toggleTheme())}>
               {mode === "light" ? (
@@ -179,19 +189,52 @@ function Header() {
                 />
               )}
             </IconButton>
-            {/* ============================== User or SignIn Icon or Button ============================== */}
+
+            {/* User Section */}
             {userLogin ? (
-              <IconButton onClick={handleOpenUserMenu}>
-                <AccountCircleOutlinedIcon
-                  sx={{
-                    color: "red",
-                    filter: "drop-shadow(1px 1px 2px red)",
-                    fontSize: "1em",
-                  }}
-                />
-              </IconButton>
+              <>
+                <IconButton onClick={handleOpenUserMenu}>
+                  <AccountCircleOutlinedIcon
+                    sx={{
+                      color: "red",
+                      filter: "drop-shadow(1px 1px 2px red)",
+                      fontSize: "1em",
+                    }}
+                  />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorElUser}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      navigate("/profile");
+                    }}
+                  >
+                    <Typography textAlign="center">Profile</Typography>
+                  </MenuItem>
+
+                  {/* {userRole === "admin" && (
+                    <MenuItem
+                      onClick={() => {
+                        handleCloseUserMenu();
+                        navigate("/admin");
+                      }}
+                    >
+                      <Typography textAlign="center">Admin</Typography>
+                    </MenuItem>
+                  )} */}
+
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Menu>
+              </>
             ) : (
-              // Just use a Button (no IconButton)
               <Button
                 component={Link}
                 to={"/auth"}
@@ -202,47 +245,10 @@ function Header() {
                 Login
               </Button>
             )}
-            <Menu
-              anchorEl={anchorElUser}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-            >
-              {/*  */}
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Profile</Typography>
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleCloseUserMenu();
-                  signOut(auth)
-                    .then(() => {
-                      toast.success("✅ Sign-out successful", {
-                        position: "top-center",
-                        autoClose: 2500,
-                        theme: "colored",
-                      });
-                      navigate("/");
-                    })
-                    .catch((error) => {
-                      toast.error(error.message || "An error happened!", {
-                        position: "top-center",
-                        autoClose: 2500,
-                        theme: "colored",
-                      });
-                    });
-                }}
-              >
-                <Typography textAlign="center">Logout</Typography>
-              </MenuItem>
-              {/*  */}
-            </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
-
 export default Header;

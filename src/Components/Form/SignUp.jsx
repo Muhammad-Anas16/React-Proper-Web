@@ -3,10 +3,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../Firebase/Firebase";
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 // Schema
 const schema = yup.object({
@@ -25,8 +27,9 @@ const schema = yup.object({
 });
 
 const SignUp = () => {
-
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -38,10 +41,9 @@ const SignUp = () => {
     mode: "onSubmit",
   });
 
-  // Show toasts for all field errors once on submit
   useEffect(() => {
     Object.entries(errors).forEach(([key, value]) => {
-      toast.dismiss(); // Remove previous
+      toast.dismiss();
       toast.error(value.message, {
         position: "top-center",
         autoClose: 3000,
@@ -51,13 +53,22 @@ const SignUp = () => {
         draggable: false,
         progress: undefined,
         icon: "⚠️",
-        toastId: key, // Prevent duplicates
+        toastId: key,
         theme: "colored",
       });
     });
   }, [errors]);
 
+  const showErrorToast = (message) => {
+    toast.error(message || "Something went wrong!", {
+      position: "top-center",
+      autoClose: 2500,
+      theme: "colored",
+    });
+  };
+
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
     const { username, email, password } = data;
 
     try {
@@ -78,20 +89,14 @@ const SignUp = () => {
         position: "top-center",
         autoClose: 2500,
         theme: "colored",
+        onClose: () => navigate("/"),
       });
 
       console.log(user);
-
       reset();
-
-      navigate("/")
     } catch (error) {
-      toast.error(error.message, {
-        position: "top-center",
-        autoClose: 2500,
-        theme: "colored",
-      });
-      reset();
+      showErrorToast(error.message);
+      setIsSubmitting(false);
     }
   };
 
@@ -112,7 +117,6 @@ const SignUp = () => {
           <div>
             <input
               type="text"
-              id="username"
               placeholder="Name"
               className="w-full py-2.5 px-4 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black placeholder:text-gray-500"
               {...register("username")}
@@ -123,30 +127,39 @@ const SignUp = () => {
           <div>
             <input
               type="email"
-              id="email"
               placeholder="Email address"
               className="w-full py-2.5 px-4 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black placeholder:text-gray-500"
               {...register("email")}
             />
           </div>
 
-          {/* Password */}
-          <div>
+          {/* Password with toggle */}
+          <div className="relative">
             <input
-              type="password"
-              id="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full py-2.5 px-4 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black placeholder:text-gray-500"
+              className="w-full py-2.5 px-4 pr-11 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black placeholder:text-gray-500"
               {...register("password")}
             />
+            <div
+              className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? (
+                <VisibilityOffIcon style={{ fontSize: 20 }} />
+              ) : (
+                <VisibilityIcon style={{ fontSize: 20 }} />
+              )}
+            </div>
           </div>
 
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-[#DB4444] text-white font-semibold text-sm py-2.5 rounded-md hover:bg-red-600 transition-colors"
+            disabled={isSubmitting}
+            className={`w-full font-semibold text-sm py-2.5 rounded-md transition-colors bg-[#DB4444] hover:bg-red-600 text-white`}
           >
-            Create Account
+            {isSubmitting ? "Please wait..." : "Create Account"}
           </button>
 
           {/* Google Signup */}
@@ -162,10 +175,13 @@ const SignUp = () => {
             Sign up with Google
           </button>
 
-          {/* Redirect */}
+          {/* Redirect to Login */}
           <p className="text-sm text-center pt-2">
             Already have an account?{" "}
-            <span onClick={() => navigate("/auth")} className="text-blue-600 hover:underline cursor-pointer">
+            <span
+              onClick={() => navigate("/auth")}
+              className="text-blue-600 hover:underline cursor-pointer"
+            >
               Log in
             </span>
           </p>
