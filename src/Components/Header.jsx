@@ -30,13 +30,13 @@ const pages = [
 
 function Header() {
   const navigate = useNavigate();
+  const userLogin = useSelector((state) => state.IsLogin.IsLogin);
   const dispatch = useDispatch();
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const mode = useSelector((state) => state.theme.mode);
-  const userLogin = useSelector((state) => state.IsLogin.IsLogin);
   const userRole = useSelector((state) => state.User?.role || "user"); // Optional role
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
