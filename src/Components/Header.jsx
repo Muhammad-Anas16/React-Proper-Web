@@ -9,7 +9,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SunnyIcon from "@mui/icons-material/Sunny";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import { Link, useNavigate } from "react-router";
@@ -19,9 +18,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../Firebase/Firebase";
 import { signOut } from "firebase/auth";
-// import { setIsLogin } from "../Redux/IsLogin/IsLoginSlice";
+import { Avatar } from "@mui/material";
 
-// Array of menu items with paths
+
 const pages = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
@@ -43,6 +42,7 @@ function Header() {
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
+
 
   const handleLogout = () => {
     handleCloseUserMenu();
@@ -194,12 +194,16 @@ function Header() {
             {userLogin ? (
               <>
                 <IconButton onClick={handleOpenUserMenu}>
-                  <AccountCircleOutlinedIcon
+                  {/* <AccountCircleOutlinedIcon
                     sx={{
                       color: "red",
                       filter: "drop-shadow(1px 1px 2px red)",
                       fontSize: "1em",
                     }}
+                  /> */}
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="https://www.clipartmax.com/png/middle/91-915439_to-the-functionality-and-user-experience-of-our-site-red-person-icon.png"
                   />
                 </IconButton>
                 <Menu
@@ -209,28 +213,25 @@ function Header() {
                   anchorOrigin={{ vertical: "top", horizontal: "right" }}
                   transformOrigin={{ vertical: "top", horizontal: "right" }}
                 >
-                  <MenuItem
+                  {/* <MenuItem
                     onClick={() => {
                       handleCloseUserMenu();
                       navigate("/profile");
                     }}
                   >
                     <Typography textAlign="center">Profile</Typography>
+                  </MenuItem> */}
+
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseUserMenu();
+                    }}
+                  >
+                    <Typography textAlign="center">Account</Typography>
                   </MenuItem>
 
-                  {/* {userRole === "admin" && (
-                    <MenuItem
-                      onClick={() => {
-                        handleCloseUserMenu();
-                        navigate("/admin");
-                      }}
-                    >
-                      <Typography textAlign="center">Admin</Typography>
-                    </MenuItem>
-                  )} */}
-
                   <MenuItem onClick={handleLogout}>
-                    <Typography textAlign="center">Logout</Typography>
+                    <Typography textAlign="center" >Logout</Typography>
                   </MenuItem>
                 </Menu>
               </>
@@ -245,6 +246,7 @@ function Header() {
                 Login
               </Button>
             )}
+            {/*  */}
           </Box>
         </Toolbar>
       </Container>

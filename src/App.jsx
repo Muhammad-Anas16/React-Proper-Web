@@ -17,9 +17,13 @@ import { auth } from "./Firebase/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setIsLogin } from "./Redux/IsLogin/IsLoginSlice";
 import { useDispatch } from "react-redux";
+import Profile from "./Components/UserProfile/Profile";
+import EditProfile from "./Components/UserProfile/EditProfile";
 
 const App = () => {
   Shop();
+
+  const [detail, setDetail] = useState(null);
 
   let dispatch = useDispatch();
 
@@ -27,6 +31,7 @@ const App = () => {
     if (user) {
       const uid = user.uid;
       dispatch(setIsLogin(uid));
+      setDetail(user);
       // ...
     } else {
       dispatch(setIsLogin(null));
@@ -43,6 +48,8 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/product" element={<Product />} />
+        <Route path="/profile" element={<Profile detail={detail} />} />
+        <Route path="/edit" element={<EditProfile />} />
         <Route path="/:id">
           <Route index element={<ProductDetail />} />
           <Route path="billing" element={<BillingDetail />} />
