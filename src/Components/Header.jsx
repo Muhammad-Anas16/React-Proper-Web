@@ -9,8 +9,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import SunnyIcon from "@mui/icons-material/Sunny";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
+// import SunnyIcon from "@mui/icons-material/Sunny";
+// import Brightness4Icon from "@mui/icons-material/Brightness4";
 import { Link, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Redux/Theme/ThemeSlice";
@@ -170,7 +170,7 @@ function Header() {
 
           {/* Right Side Icons */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <IconButton onClick={() => dispatch(toggleTheme())}>
+            {/* <IconButton onClick={() => dispatch(toggleTheme())}>
               {mode === "light" ? (
                 <SunnyIcon
                   sx={{
@@ -188,7 +188,7 @@ function Header() {
                   }}
                 />
               )}
-            </IconButton>
+            </IconButton> */}
 
             {/* User Section */}
             {userLogin ? (
@@ -222,13 +222,13 @@ function Header() {
                     <Typography textAlign="center">Profile</Typography>
                   </MenuItem> */}
 
-                  <MenuItem
+                  {/* <MenuItem
                     onClick={() => {
                       handleCloseUserMenu();
                     }}
                   >
                     <Typography textAlign="center">Account</Typography>
-                  </MenuItem>
+                  </MenuItem> */}
 
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center" >Logout</Typography>
