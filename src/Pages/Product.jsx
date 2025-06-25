@@ -6,7 +6,7 @@ import { db } from "../Firebase/Firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 const Product = () => {
-  const [addProducts, setAddProducts] = useState(10);
+  const [addProducts, setAddProducts] = useState(40);
   const [count, setCount] = useState(1);
 
   const navigate = useNavigate();
@@ -71,8 +71,8 @@ const Product = () => {
                       }}
                       className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     >
-                      <LocalGroceryStoreOutlinedIcon fontSize="small" /> Add to
-                      Cart
+                      <LocalGroceryStoreOutlinedIcon fontSize="small" />
+                      {""} Shop Now
                     </button>
                   </div>
                   <div className="mt-1 text-center">

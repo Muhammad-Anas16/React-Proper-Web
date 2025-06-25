@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setProducts } from "../Redux/product/ProductSlice";
+import { customProductData } from "../Components/CustomProduct/cutomProductsData";
 
 export const Shop = () => {
 
@@ -16,8 +17,11 @@ export const Shop = () => {
 
     useEffect(() => {
         if (isSuccess && data) {
-            // console.log('Shop fetched data using Import:', data);
-            dispatch(setProducts(data))
+            // Merge API data with custom products
+            const mergedProducts = [...data, ...customProductData];
+
+            // Dispatch merged data to Redux
+            dispatch(setProducts(mergedProducts));
         }
     }, [isSuccess, data, dispatch]);
 }

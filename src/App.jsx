@@ -16,7 +16,8 @@ import ForgotPassword from "./Pages/ForgetPassword";
 import { auth } from "./Firebase/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setIsLogin } from "./Redux/IsLogin/IsLoginSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const App = () => {
   Shop();
@@ -27,7 +28,7 @@ const App = () => {
     if (user) {
       const uid = user.uid;
       dispatch(setIsLogin(uid));
-      setDetail(user);
+      // setDetail(user);
       // ...
     } else {
       dispatch(setIsLogin(null));
@@ -35,6 +36,9 @@ const App = () => {
       console.log("user is Not Login");
     }
   });
+
+  const totalProducts = useSelector((state) => state.products.products);
+  // console.log(totalProducts)
 
   return (
     <>

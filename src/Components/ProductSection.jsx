@@ -50,7 +50,7 @@ const ProductSection = () => {
         </Link>
       </div>
       <div className="container px-4 py-6 mx-auto">
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {products.map((item, index) => {
             if (userLogin) {
               return (
@@ -74,8 +74,8 @@ const ProductSection = () => {
                       }}
                       className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     >
-                      <LocalGroceryStoreOutlinedIcon fontSize="small" /> Add to
-                      Cart
+                      <LocalGroceryStoreOutlinedIcon fontSize="small" />
+                      {""} Shop Now
                     </button>
                   </div>
                   <div className="mt-1 text-center">
