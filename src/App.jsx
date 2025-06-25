@@ -6,7 +6,7 @@ import SignUp from "./Components/Form/SignUp";
 import Login from "./Components/Form/Login";
 import About from "./Pages/About";
 import ContactUs from "./Pages/ContactUs";
-import { Route, Routes, useParams } from "react-router";
+import { Route, Routes, useLocation, useParams } from "react-router";
 import Page404 from "./Pages/PageNotFound";
 import { Shop } from "./TenStack/Shop";
 import ProductDetail from "./Pages/ProductDetail";
@@ -16,8 +16,7 @@ import ForgotPassword from "./Pages/ForgetPassword";
 import { auth } from "./Firebase/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setIsLogin } from "./Redux/IsLogin/IsLoginSlice";
-import { useDispatch, useSelector } from "react-redux";
-
+import { useDispatch } from "react-redux";
 
 const App = () => {
   Shop();
@@ -37,17 +36,22 @@ const App = () => {
     }
   });
 
-  const totalProducts = useSelector((state) => state.products.products);
-  // console.log(totalProducts)
+  const location = useLocation();
+
+  const hideHeaderPath = ["/auth", "/auth/signup", "/auth/forgetpassword"];
+
+  const whenHideHeader = hideHeaderPath.includes(location?.pathname);
 
   return (
     <>
-      <Header />
+      {whenHideHeader ? null : <Header />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
-        <Route path="/product" element={<Product />} />
+        <Route path="/product" element={<Product />} /> {/* For all Products */}
+        <Route path="/product/:category" element={<Product />} />
+        {/* For selected Category Products */}
         <Route path="/:id">
           <Route index element={<ProductDetail />} />
           <Route path="billing" element={<BillingDetail />} />

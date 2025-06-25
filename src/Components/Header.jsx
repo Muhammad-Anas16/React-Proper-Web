@@ -75,7 +75,6 @@ function Header() {
       <ToastContainer />
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* Desktop Logo */}
           <Typography
             variant="h6"
             noWrap
@@ -92,7 +91,6 @@ function Header() {
             Exclusive
           </Typography>
 
-          {/* Mobile Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton size="large" onClick={handleOpenNavMenu}>
               <MenuIcon sx={{ color: mode === "dark" ? "white" : "black" }} />
@@ -124,7 +122,6 @@ function Header() {
             </Menu>
           </Box>
 
-          {/* Mobile Logo */}
           <Typography
             variant="h5"
             noWrap
@@ -154,7 +151,7 @@ function Header() {
                   my: 2,
                   color: mode === "dark" ? "white" : "black",
                   display: "block",
-                  fontWeight: 500,
+                  fontWeight: 900,
                   borderBottom: "2px solid transparent",
                   transition: "color 0.3s, border-bottom 0.3s",
                   "&:hover": {

@@ -20,6 +20,7 @@ const Product = () => {
     (state) => state.products.products
   );
 
+  console.log(totalAddProductsNumber?.category)
   const QTY = Math.ceil(totalAddProductsNumber.length / 10);
 
   // console.log("QTY :", QTY);
