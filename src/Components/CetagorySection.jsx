@@ -1,7 +1,12 @@
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
 const CetagorySection = () => {
   const navigate = useNavigate();
+
+  const products = useSelector(state => state.customProducts.customProducts);
+
+  
 
   const data = [
     {

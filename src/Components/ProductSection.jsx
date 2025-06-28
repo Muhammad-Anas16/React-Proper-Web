@@ -16,24 +16,24 @@ const ProductSection = () => {
     setIsLoading(true);
   }, 3000);
 
-  const HandleAddToCard = async (image, title, price) => {
-    if (!userLogin) {
-      navigate("/auth");
-      return;
-    }
+  // const HandleAddToCard = async (image, title, price) => {
+  //   if (!userLogin) {
+  //     navigate("/auth");
+  //     return;
+  //   }
 
-    try {
-      const docRef = await addDoc(collection(db, "carts"), {
-        image,
-        title,
-        price,
-        uid: userLogin,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
+  //   try {
+  //     const docRef = await addDoc(collection(db, "carts"), {
+  //       image,
+  //       title,
+  //       price,
+  //       uid: userLogin,
+  //     });
+  //     console.log("Document written with ID: ", docRef.id);
+  //   } catch (e) {
+  //     console.error("Error adding document: ", e);
+  //   }
+  // };
 
   return (
     <section className="text-gray-600 body-font border border-gray-300">
@@ -63,15 +63,15 @@ const ProductSection = () => {
                     />
                     {/* Show Add to Cart only when user is logged in */}
                     <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        HandleAddToCard(
-                          item?.images[0],
-                          item?.title,
-                          item?.price
-                        );
-                      }}
+                      // onClick={(e) => {
+                      //   e.preventDefault();
+                      //   e.stopPropagation();
+                      //   HandleAddToCard(
+                      //     item?.images[0],
+                      //     item?.title,
+                      //     item?.price
+                      //   );
+                      // }}
                       className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     >
                       <LocalGroceryStoreOutlinedIcon fontSize="small" />

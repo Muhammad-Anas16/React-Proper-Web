@@ -17,6 +17,8 @@ import { auth } from "./Firebase/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setIsLogin } from "./Redux/IsLogin/IsLoginSlice";
 import { useDispatch } from "react-redux";
+import { setCustomProducts } from "./Redux/CustomProduct/CustomProductSlice";
+import { customProductData } from "./Components/CustomProduct/cutomProductsData";
 
 const App = () => {
   Shop();
@@ -36,6 +38,8 @@ const App = () => {
     }
   });
 
+  dispatch(setCustomProducts(customProductData));
+
   const location = useLocation();
 
   const hideHeaderPath = ["/auth", "/auth/signup", "/auth/forgetpassword"];
@@ -50,8 +54,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/product" element={<Product />} /> {/* For all Products */}
-        <Route path="/product/:category" element={<Product />} />
-        {/* For selected Category Products */}
+        <Route path="/product/:category" element={<Product />} />{/* selected Category Product */}
         <Route path="/:id">
           <Route index element={<ProductDetail />} />
           <Route path="billing" element={<BillingDetail />} />

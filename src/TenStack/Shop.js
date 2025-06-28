@@ -17,11 +17,7 @@ export const Shop = () => {
 
     useEffect(() => {
         if (isSuccess && data) {
-            // Merge API data with custom products
-            const mergedProducts = [...data, ...customProductData];
-
-            // Dispatch merged data to Redux
-            dispatch(setProducts(mergedProducts));
+            dispatch(setProducts(data));
         }
     }, [isSuccess, data, dispatch]);
 }
