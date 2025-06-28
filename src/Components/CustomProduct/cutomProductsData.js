@@ -649,6 +649,91 @@ const customProductData = [
     price: 170,
     title: "Adjustable Dumbbell Set"
   },
+
+  {
+    category: "Mobile",
+    brand: "iPhone",
+    creationAt: "2025-06-01T10:00:00.000Z",
+    id: 1100,
+    image: "https://pngate.com/wp-content/uploads/2025/03/iphone-15-pro-max-black-titanium-1.png",
+    name: "iPhone 15 Pro Max",
+    slug: "iphone-15-pro-max",
+    updatedAt: "2025-06-24T10:00:00.000Z",
+    description: "Apple's top-tier phone with A17 Bionic chip and titanium build.",
+    images: ["https://pngate.com/wp-content/uploads/2025/03/iphone-15-pro-max-black-titanium-1.png"],
+    price: 1299,
+    title: "iPhone 15 Pro Max"
+  },
+  {
+    category: "Mobile",
+    brand: "Tecno",
+    creationAt: "2025-06-02T11:00:00.000Z",
+    id: 1101,
+    image: "https://smartechica.pe/files/TECNO-SPARK-20-PRO-PLUS-PRESENTACI%C3%93N.png",
+    name: "Tecno Spark 20",
+    slug: "tecno-spark-20",
+    updatedAt: "2025-06-24T11:00:00.000Z",
+    description: "Affordable option with a stylish design and a big battery.",
+    images: ["https://smartechica.pe/files/TECNO-SPARK-20-PRO-PLUS-PRESENTACI%C3%93N.png"],
+    price: 150,
+    title: "Tecno Spark 20"
+  },
+  {
+    category: "Mobile",
+    brand: "Infinix",
+    creationAt: "2025-06-03T12:00:00.000Z",
+    id: 1102,
+    image: "https://global.pro.infinixmobility.com/media/wysiwyg/base-4-family-series.png",
+    name: "Infinix Zero 30",
+    slug: "infinix-zero-30",
+    updatedAt: "2025-06-24T12:00:00.000Z",
+    description: "A feature-rich phone for creators with a 108MP camera.",
+    images: ["https://global.pro.infinixmobility.com/media/wysiwyg/base-4-family-series.png"],
+    price: 240,
+    title: "Infinix Zero 30"
+  },
+  {
+    category: "Mobile",
+    brand: "Huawei",
+    creationAt: "2025-06-04T13:00:00.000Z",
+    id: 1103,
+    image: "https://rentoza.co.za/cdn/shop/files/p60problackfrontandrear.png?v=1734709644",
+    name: "Huawei P60 Pro",
+    slug: "huawei-p60-pro",
+    updatedAt: "2025-06-24T13:00:00.000Z",
+    description: "Elegant design paired with advanced camera tech and HarmonyOS.",
+    images: ["https://rentoza.co.za/cdn/shop/files/p60problackfrontandrear.png?v=1734709644"],
+    price: 950,
+    title: "Huawei P60 Pro"
+  },
+  {
+    category: "Mobile",
+    brand: "Sony",
+    creationAt: "2025-06-06T15:00:00.000Z",
+    id: 1105,
+    image: "https://cdn.shopify.com/s/files/1/1398/4647/files/31.png?v=1721035011",
+    name: "Sony Xperia 1 V",
+    slug: "sony-xperia-1-v",
+    updatedAt: "2025-06-24T15:00:00.000Z",
+    description: "Cinematography-grade display and pro camera experience.",
+    images: ["https://cdn.shopify.com/s/files/1/1398/4647/files/31.png?v=1721035011"],
+    price: 1199,
+    title: "Sony Xperia 1 V"
+  },
+  {
+    category: "Mobile",
+    brand: "Motorola",
+    creationAt: "2025-06-07T16:00:00.000Z",
+    id: 1106,
+    image: "https://www.gizmochina.com/wp-content/uploads/2024/04/159916-1200-auto.png",
+    name: "Moto Edge 50 Pro",
+    slug: "moto-edge-50-pro",
+    updatedAt: "2025-06-24T16:00:00.000Z",
+    description: "Fast charging, bright display, and clean Android experience.",
+    images: ["https://www.gizmochina.com/wp-content/uploads/2024/04/159916-1200-auto.png"],
+    price: 549,
+    title: "Moto Edge 50 Pro"
+  }
 ];
 
 export { customProductData };

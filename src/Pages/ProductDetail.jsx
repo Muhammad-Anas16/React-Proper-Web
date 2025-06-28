@@ -7,9 +7,11 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const userLogin = useSelector((state) => state.IsLogin.IsLogin);
 
-  const products = useSelector((state) => state.products.products);
+  const item = useSelector((state) => state.products.products);
+  const cutom = useSelector((state) => state.customProducts.customProducts);
 
-  const currentData = products.find((data) => data.id == id);
+  const currentData =
+    item.find((data) => data.id == id) || cutom.find((data) => data.id == id);
 
   return (
     <section className="text-gray-600 body-font overflow-hidden">
@@ -21,9 +23,6 @@ const ProductDetail = () => {
             src={currentData?.images[0]}
           />
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-            {/* <h2 className="text-sm title-font text-gray-500 tracking-widest">
-              {currentData?.brand}
-            </h2> */}
             <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
               {currentData?.title}
             </h1>

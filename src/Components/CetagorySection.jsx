@@ -4,9 +4,9 @@ import { useNavigate } from "react-router";
 const CetagorySection = () => {
   const navigate = useNavigate();
 
-  const products = useSelector(state => state.customProducts.customProducts);
+  const products = useSelector((state) => state.customProducts.customProducts);
 
-  
+  // products.map((item) => console.log(item.category));
 
   const data = [
     {
@@ -29,7 +29,34 @@ const CetagorySection = () => {
       name: "Furniture",
       icon: `${"https://cdn-icons-png.flaticon.com/512/1198/1198419.png"}`,
     },
+
+    {
+      name: "Toys",
+      icon: `${"https://www.vhv.rs/dpng/d/601-6015628_mono-package-toys-clip-arts-kids-toy-icon.png"}`,
+    },
+
+    {
+      name: "Accessories",
+      icon: `${"https://static.thenounproject.com/png/4311834-200.png"}`,
+    },
+
+    {
+      name: "Beauty",
+      icon: `${"https://icons.veryicon.com/png/o/miscellaneous/mall-background-icon/beauty-skin-care-1.png"}`,
+    },
+
+    {
+      name: "Books",
+      icon: `${"https://toppng.com/uploads/preview/this-free-icons-design-of-books-opened-11550253335r5kvxff5ql.png"}`,
+    },
+
+    {
+      name: "Mobile",
+      icon: `${"https://icon2.cleanpng.com/20180412/zww/avu08m80h.webp"}`,
+    },
   ];
+
+  // Mobile
 
   return (
     <section className="text-gray-600 body-font border border-gray-300">

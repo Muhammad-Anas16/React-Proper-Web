@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setProducts } from "../Redux/product/ProductSlice";
-import { customProductData } from "../Components/CustomProduct/cutomProductsData";
+
 
 export const Shop = () => {
 

@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
 import Loader from "./Loading";
 import { db } from "../Firebase/Firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 const ProductSection = () => {
-  const navigate = useNavigate();
   const userLogin = useSelector((state) => state.IsLogin.IsLogin);
-  const products = useSelector((state) => state.products.products).slice(5, 15);
+  const products = useSelector(
+    (state) => state.customProducts.customProducts
+  ).slice(5, 15);
   const [isLoading, setIsLoading] = useState(false);
 
   const changeIsLoading = setInterval(() => {
