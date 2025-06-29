@@ -35,7 +35,6 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const mode = useSelector((state) => state.theme.mode);
-  const userRole = useSelector((state) => state.User?.role || "user"); // Optional role
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);

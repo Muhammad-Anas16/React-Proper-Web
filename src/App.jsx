@@ -16,14 +16,17 @@ import ForgotPassword from "./Pages/ForgetPassword";
 import { auth } from "./Firebase/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setIsLogin } from "./Redux/IsLogin/IsLoginSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCustomProducts } from "./Redux/CustomProduct/CustomProductSlice";
 import { customProductData } from "./Components/CustomProduct/cutomProductsData";
+import { Box } from "@mui/material";
 
 const App = () => {
   Shop();
 
   let dispatch = useDispatch();
+
+    const mode = useSelector((state) => state.theme.mode);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -40,21 +43,23 @@ const App = () => {
 
   dispatch(setCustomProducts(customProductData));
 
+  console.log(mode)
+
   const location = useLocation();
-
   const hideHeaderPath = ["/auth", "/auth/signup", "/auth/forgetpassword"];
-
   const whenHideHeader = hideHeaderPath.includes(location?.pathname);
 
   return (
-    <>
+    <Box sx={{
+      backgroundColor : mode === "light" ? "#FEFEFE" : "#121212"
+    }}>
       {whenHideHeader ? null : <Header />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/product" element={<Product />} /> {/* For all Products */}
-        <Route path="/product/:category" element={<Product />} />{/* selected Category Product */}
+        <Route path="/product/:category" element={<Product />} />
         <Route path="/:id">
           <Route index element={<ProductDetail />} />
           <Route path="billing" element={<BillingDetail />} />
@@ -66,7 +71,7 @@ const App = () => {
         </Route>
         <Route path="*" element={<Page404 />} />
       </Routes>
-    </>
+    </Box>
   );
 };
 
