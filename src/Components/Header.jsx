@@ -9,8 +9,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-// import SunnyIcon from "@mui/icons-material/Sunny";
-// import Brightness4Icon from "@mui/icons-material/Brightness4";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import { Link, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Redux/Theme/ThemeSlice";
@@ -19,7 +19,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../Firebase/Firebase";
 import { signOut } from "firebase/auth";
 import { Avatar } from "@mui/material";
-
 
 const pages = [
   { name: "Home", path: "/" },
@@ -42,7 +41,6 @@ function Header() {
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
-
 
   const handleLogout = () => {
     handleCloseUserMenu();
@@ -68,7 +66,7 @@ function Header() {
     <AppBar
       position="static"
       sx={{
-        backgroundColor: mode === "light" ? "white" : "black",
+        backgroundColor: mode == "light" ? "#6200EE" : "#202020",
         boxShadow: 1,
       }}
     >
@@ -83,8 +81,9 @@ function Header() {
             sx={{
               mr: 4,
               display: { xs: "none", md: "flex" },
-              fontWeight: 700,
-              color: mode === "dark" ? "white" : "black",
+              fontWeight: 900,
+              // fontSize: "1.5em",
+              color: "white",
               textDecoration: "none",
             }}
           >
@@ -132,14 +131,13 @@ function Header() {
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontWeight: 700,
-              color: mode === "dark" ? "white" : "black",
+              color: "white",
               textDecoration: "none",
             }}
           >
             E - SHOP
           </Typography>
 
-          {/* Desktop Nav */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -149,14 +147,14 @@ function Header() {
                 onClick={handleCloseNavMenu}
                 sx={{
                   my: 2,
-                  color: mode === "dark" ? "white" : "black",
+                  color: "white",
                   display: "block",
                   fontWeight: 900,
                   borderBottom: "2px solid transparent",
                   transition: "color 0.3s, border-bottom 0.3s",
+                  // transition: "font-size 0.3s ease",
                   "&:hover": {
-                    color: "#DB4444",
-                    borderBottom: "2px solid #DB4444",
+                    fontStyle: "italic",
                   },
                 }}
               >
@@ -166,41 +164,33 @@ function Header() {
           </Box>
 
           {/* Right Side Icons */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* <IconButton onClick={() => dispatch(toggleTheme())}>
-              {mode === "light" ? (
-                <SunnyIcon
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton onClick={() => dispatch(toggleTheme())}>
+              {mode == "light" ? (
+                <DarkModeOutlinedIcon
                   sx={{
-                    color: "black",
-                    filter: "drop-shadow(1px 1px 2px black)",
-                    fontSize: "1em",
+                    color: "white",
+                    fontSize: "1.2em",
                   }}
                 />
               ) : (
-                <Brightness4Icon
+                <LightModeOutlinedIcon
                   sx={{
                     color: "white",
-                    filter: "drop-shadow(1px 1px 2px white)",
-                    fontSize: "1em",
+                    fontSize: "1.2em",
                   }}
                 />
               )}
-            </IconButton> */}
+            </IconButton>
 
             {/* User Section */}
             {userLogin ? (
               <>
                 <IconButton onClick={handleOpenUserMenu}>
-                  {/* <AccountCircleOutlinedIcon
-                    sx={{
-                      color: "red",
-                      filter: "drop-shadow(1px 1px 2px red)",
-                      fontSize: "1em",
-                    }}
-                  /> */}
                   <Avatar
-                    alt="Remy Sharp"
-                    src="https://www.clipartmax.com/png/middle/91-915439_to-the-functionality-and-user-experience-of-our-site-red-person-icon.png"
+                    src="/broken-image.jpg"
+                    alt="User Avatar"
+                    sx={{ width: 32, height: 32 }}
                   />
                 </IconButton>
                 <Menu
@@ -228,7 +218,7 @@ function Header() {
                   </MenuItem> */}
 
                   <MenuItem onClick={handleLogout}>
-                    <Typography textAlign="center" >Logout</Typography>
+                    <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
                 </Menu>
               </>
