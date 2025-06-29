@@ -2,31 +2,50 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
-import Pagination from "@mui/material/Pagination";
+import { Stack, Pagination, PaginationItem } from "@mui/material";
 
 const Product = () => {
   const { category } = useParams();
-  const [addProducts, setAddProducts] = useState(10);
-  const [count, setCount] = useState(1);
+  const [initialProducts, setInitialProducts] = useState(0); // Initial Products
+  const [addProducts, setAddProducts] = useState(10); // Initial + 10 Products
+  const [page, setPage] = useState(1); // Page number for pagination
 
-  const userLogin = useSelector((state) => state.IsLogin.IsLogin);
+  const userLogin = useSelector((state) => state.IsLogin.IsLogin); // Checking User in Login or Not
   const allProducts = useSelector(
     (state) => state.customProducts.customProducts
-  );
+  ); // Custom hard Coded Products I store in Rudux
 
-  // Your logic: filter first if category is passed, else show all
   const filterCategory = allProducts.filter(
+    // if category passed if not show all produ0cts
     (item) => item?.category === category
   );
   const products = category
     ? filterCategory
-    : allProducts.slice(0, addProducts);
+    : allProducts.slice(initialProducts, addProducts);
 
   const QTY = Math.ceil(
     (category ? filterCategory.length : allProducts.length) / 10
-  );
+  ); // Total Products QTY
 
-  console.log(QTY);
+  // const HandleNextPagination = () => {
+  //   setPage((prev) => prev + 1);
+  //   setInitialProducts((prev) => prev + 10);
+  //   setAddProducts((prev) => prev + 10);
+  // };
+
+  // const HandleBeforePagination = () => {
+  //   setPage((prev) => prev - 1);
+  //   setInitialProducts((prev) => prev - 10);
+  //   setAddProducts((prev) => prev - 10);
+  // };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    setInitialProducts((value - 1) * 10);
+    setAddProducts(value * 10);
+  };
+
+  // console.log(page);
 
   return (
     <section className="text-gray-600 body-font border border-gray-300">
@@ -59,22 +78,24 @@ const Product = () => {
             </Link>
           ))}
         </div>
-
-        {count < QTY && (
-          <div className="w-full flex items-center justify-center mt-4">
-            <button
-              className="w-[50vw] capitalize text-white bg-black py-2 px-4 rounded-full"
-              onClick={() => {
-                setAddProducts((prev) => prev + 10);
-                setCount((prev) => prev + 1);
-              }}
-            >
-              load more
-            </button>
-          </div>
-        )}
-
-        <Pagination count={QTY} />
+        <Stack spacing={3} alignItems={"center"}>
+          <Pagination
+            count={QTY}
+            page={page}
+            onChange={handlePageChange}
+            size="large"
+            color="primary"
+            renderItem={(item) => (
+              <PaginationItem
+                {...item}
+                disabled={
+                  (item.type === "previous" && initialProducts === 0) ||
+                  (item.type === "next" && page === QTY)
+                }
+              />
+            )}
+          />
+        </Stack>
       </div>
     </section>
   );
