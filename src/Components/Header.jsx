@@ -226,7 +226,7 @@ function Header() {
                 component={Link}
                 to={"/auth"}
                 sx={{
-                  color: mode === "dark" ? "white" : "black",
+                  color: "white",
                 }}
               >
                 Login

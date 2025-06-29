@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+
 const NewArrival = () => {
   const features = [
     {
@@ -129,8 +131,16 @@ const NewArrival = () => {
     },
   ];
 
+  const mode = useSelector((state) => state.theme.mode);
+
   return (
-    <section className="text-gray-600 body-font border border-gray-300">
+    <section
+      className={`body-font border ${
+        mode === "dark"
+          ? "bg-gray-900 text-gray-100 border-gray-700"
+          : "bg-white text-gray-600 border-gray-300"
+      }`}
+    >
       <div className="container px-5 py-24 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
           {features.map((card, idx) => (
@@ -138,11 +148,21 @@ const NewArrival = () => {
               key={idx}
               className="flex flex-col text-center items-center max-w-sm"
             >
-              <div className="w-20 h-20 inline-flex items-center justify-center rounded-full bg-[#C1C0C1] text-white mb-5 flex-shrink-0">
+              <div
+                className={`w-20 h-20 inline-flex items-center justify-center rounded-full mb-5 flex-shrink-0 ${
+                  mode === "dark"
+                    ? "bg-gray-700 text-white"
+                    : "bg-[#C1C0C1] text-white"
+                }`}
+              >
                 {card.svg}
               </div>
               <div className="flex-grow">
-                <h2 className="text-gray-900 text-lg title-font font-bold mb-2">
+                <h2
+                  className={`text-lg title-font font-bold mb-2 ${
+                    mode === "dark" ? "text-white" : "text-gray-900"
+                  }`}
+                >
                   {card.title}
                 </h2>
                 <p className="leading-relaxed text-sm">{card.description}</p>

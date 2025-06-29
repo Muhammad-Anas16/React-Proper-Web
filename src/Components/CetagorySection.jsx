@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 const CetagorySection = () => {
   const navigate = useNavigate();
 
+  const mode = useSelector((state) => state.theme.mode);
+
   const products = useSelector((state) => state.customProducts.customProducts);
 
   // products.map((item) => console.log(item.category));

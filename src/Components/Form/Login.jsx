@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useSelector } from "react-redux";
 
 // Validation Schema
 const loginSchema = yup.object({
@@ -78,15 +79,37 @@ const Login = () => {
     }
   };
 
+  const mode = useSelector((state) => state.theme.mode);
+
   return (
-    <section className="w-full min-h-[90vh] flex items-center justify-center px-4 bg-gray-50">
-      <div className="w-full sm:w-[80%] md:w-[60%] lg:w-[35%] max-w-md bg-white shadow-lg border border-gray-200 px-6 md:px-8 py-10 rounded-xl">
+    <section
+      className={`w-full min-h-[100vh] flex items-center justify-center px-4 ${
+        mode === "dark" ? "bg-gray-900" : "bg-gray-50"
+      }`}
+    >
+      <div
+        className={`w-full sm:w-[80%] md:w-[60%] lg:w-[35%] max-w-md shadow-lg border px-6 md:px-8 py-10 rounded-xl ${
+          mode === "dark"
+            ? "bg-gray-800 border-gray-700"
+            : "bg-white border-gray-200"
+        }`}
+      >
         <ToastContainer />
         <div className="mb-6 text-center">
-          <h1 className="font-bold text-3xl text-gray-800 mb-2">
+          <h1
+            className={`font-bold text-3xl mb-2 ${
+              mode === "dark" ? "text-white" : "text-gray-800"
+            }`}
+          >
             Log in to Exclusive
           </h1>
-          <p className="text-sm text-gray-500">Enter your details below</p>
+          <p
+            className={`text-sm ${
+              mode === "dark" ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
+            Enter your details below
+          </p>
         </div>
 
         <form className="w-full space-y-5" onSubmit={handleSubmit(onSubmit)}>
@@ -94,7 +117,11 @@ const Login = () => {
           <input
             type="email"
             placeholder="Email address"
-            className="w-full py-2.5 px-4 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black placeholder:text-gray-500"
+            className={`w-full py-2.5 px-4 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-black placeholder:text-gray-500 ${
+              mode === "dark"
+                ? "bg-gray-700 text-white border border-gray-600"
+                : "bg-white text-gray-900 border border-gray-300"
+            }`}
             {...register("email")}
           />
 
@@ -103,7 +130,11 @@ const Login = () => {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full py-2.5 px-4 pr-11 text-sm text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black placeholder:text-gray-500"
+              className={`w-full py-2.5 px-4 pr-11 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-black placeholder:text-gray-500 ${
+                mode === "dark"
+                  ? "bg-gray-700 text-white border border-gray-600"
+                  : "bg-white text-gray-900 border border-gray-300"
+              }`}
               {...register("password")}
             />
             <div
@@ -130,14 +161,18 @@ const Login = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full font-semibold text-sm py-2.5 rounded-md transition-colors bg-[#DB4444] hover:bg-red-600 text-white`}
+            className="w-full font-semibold text-sm py-2.5 rounded-md transition-colors bg-[#DB4444] hover:bg-red-600 text-white"
           >
             {isSubmitting ? "Please wait for few seconds..." : "Log In"}
           </button>
 
           {/* Signup Link */}
           <div className="mt-4 text-center">
-            <p className="text-sm text-gray-700">
+            <p
+              className={`text-sm ${
+                mode === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
               Don't have an account?{" "}
               <Link to={"signup"} className="text-red-500 hover:underline">
                 Create one

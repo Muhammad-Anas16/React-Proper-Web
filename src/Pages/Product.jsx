@@ -47,8 +47,16 @@ const Product = () => {
 
   // console.log(page);
 
+  const mode = useSelector((state) => state.theme.mode);
+
   return (
-    <section className="text-gray-600 body-font border border-gray-300">
+    <section
+      className={`body-font border ${
+        mode === "dark"
+          ? "bg-gray-900 text-gray-100 border-gray-700"
+          : "bg-white text-gray-600 border-gray-300"
+      }`}
+    >
       <div className="container px-4 py-6 mx-auto">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {products.map((item, index) => (
@@ -57,7 +65,11 @@ const Product = () => {
               to={userLogin ? `/${item.id}` : "/auth"}
               className="w-full p-5"
             >
-              <div className="group relative h-32 rounded overflow-hidden bg-white shadow-sm">
+              <div
+                className={`group relative h-32 rounded overflow-hidden shadow-sm ${
+                  mode === "dark" ? "bg-gray-800" : "bg-white"
+                }`}
+              >
                 <img
                   alt="product"
                   className="object-cover w-full h-full p-2"
@@ -70,7 +82,11 @@ const Product = () => {
                 )}
               </div>
               <div className="mt-1 text-center">
-                <h2 className="text-gray-900 text-xs font-medium truncate">
+                <h2
+                  className={`text-xs font-medium truncate ${
+                    mode === "dark" ? "text-gray-100" : "text-gray-900"
+                  }`}
+                >
                   {item?.title}
                 </h2>
                 <p className="text-xs">${item?.price}.00</p>
@@ -78,6 +94,7 @@ const Product = () => {
             </Link>
           ))}
         </div>
+
         <Stack spacing={3} alignItems={"center"}>
           <Pagination
             count={QTY}
@@ -92,6 +109,9 @@ const Product = () => {
                   (item.type === "previous" && initialProducts === 0) ||
                   (item.type === "next" && page === QTY)
                 }
+                sx={{
+                  color: mode === "light" ? "black" : "white",
+                }}
               />
             )}
           />

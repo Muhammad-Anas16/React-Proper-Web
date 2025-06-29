@@ -6,7 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../Firebase/Firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -14,8 +15,7 @@ const schema = yup.object().shape({
 });
 
 const ForgotPassword = () => {
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -44,21 +44,45 @@ const ForgotPassword = () => {
     }
   };
 
+  const mode = useSelector((state) => state.theme.mode);
+
   return (
-    <div className="bg-gray-50 flex items-center justify-center min-h-screen px-4">
+    <div
+      className={`flex items-center justify-center min-h-screen px-4 ${
+        mode === "dark"
+          ? "bg-gray-900 text-gray-100"
+          : "bg-gray-50 text-gray-700"
+      }`}
+    >
       <ToastContainer />
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">
+      <div
+        className={`p-8 rounded-lg shadow-md w-full max-w-md ${
+          mode === "dark"
+            ? "bg-gray-800 border border-gray-700"
+            : "bg-white border border-gray-200"
+        }`}
+      >
+        <h2
+          className={`text-2xl font-bold text-center mb-2 ${
+            mode === "dark" ? "text-white" : "text-gray-900"
+          }`}
+        >
           Forgot Password
         </h2>
-        <p className="text-center text-gray-600 mb-6">
+        <p
+          className={`text-center mb-6 ${
+            mode === "dark" ? "text-gray-400" : "text-gray-600"
+          }`}
+        >
           Enter your email to reset your password
         </p>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className={`block text-sm font-medium mb-1 ${
+                mode === "dark" ? "text-gray-200" : "text-gray-700"
+              }`}
             >
               Email address
             </label>
@@ -66,10 +90,12 @@ const ForgotPassword = () => {
               type="email"
               id="email"
               {...register("email")}
-              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+              className={`w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
                 errors.email
                   ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-red-500"
+                  : mode === "dark"
+                  ? "bg-gray-700 text-white border-gray-600 focus:ring-red-500"
+                  : "bg-white text-gray-900 border-gray-300 focus:ring-red-500"
               }`}
             />
             {errors.email && (
@@ -86,7 +112,10 @@ const ForgotPassword = () => {
             {isSubmitting ? "Sending..." : "Send Reset Link"}
           </button>
           <div className="mt-4 text-center">
-            <span onClick={() => navigate("/auth")} className="text-sm text-red-500 hover:underline">
+            <span
+              onClick={() => navigate("/auth")}
+              className="text-sm text-red-500 hover:underline cursor-pointer"
+            >
               Back to Login
             </span>
           </div>
