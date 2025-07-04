@@ -69,7 +69,7 @@ const Login = () => {
         email,
         password
       );
-      console.log("User:", userCredential.user);
+      // console.log("User:", userCredential.user);
 
       reset();
       navigate("/");

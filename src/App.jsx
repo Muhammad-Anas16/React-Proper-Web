@@ -6,7 +6,7 @@ import SignUp from "./Components/Form/SignUp";
 import Login from "./Components/Form/Login";
 import About from "./Pages/About";
 import ContactUs from "./Pages/ContactUs";
-import { Route, Routes, useLocation, useParams } from "react-router";
+import { Route, Routes, useLocation } from "react-router";
 import Page404 from "./Pages/PageNotFound";
 import { Shop } from "./TenStack/Shop";
 import ProductDetail from "./Pages/ProductDetail";
@@ -26,7 +26,7 @@ const App = () => {
 
   let dispatch = useDispatch();
 
-    const mode = useSelector((state) => state.theme.mode);
+  const mode = useSelector((state) => state.theme.mode);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -37,22 +37,26 @@ const App = () => {
     } else {
       dispatch(setIsLogin(null));
 
-      console.log("user is Not Login");
+      // console.log("user is Not Login");
     }
   });
 
-  dispatch(setCustomProducts(customProductData));
+  useEffect(() => {
+    dispatch(setCustomProducts(customProductData));
+  }, [dispatch]);
 
-  console.log(mode)
+  // console.log(mode)
 
   const location = useLocation();
   const hideHeaderPath = ["/auth", "/auth/signup", "/auth/forgetpassword"];
   const whenHideHeader = hideHeaderPath.includes(location?.pathname);
 
   return (
-    <Box sx={{
-      backgroundColor : mode === "light" ? "#FEFEFE" : "#121212"
-    }}>
+    <Box
+      sx={{
+        backgroundColor: mode === "light" ? "#FEFEFE" : "#121212",
+      }}
+    >
       {whenHideHeader ? null : <Header />}
       <Routes>
         <Route path="/" element={<HomePage />} />
