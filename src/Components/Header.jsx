@@ -32,12 +32,12 @@ function Header() {
   const dispatch = useDispatch();
 
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
+  // const [anchorElUser, setAnchorElUser] = useState(null);
 
   const mode = useSelector((state) => state.theme.mode);
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
-  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
+  // const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
@@ -185,7 +185,7 @@ function Header() {
             {/* User Section */}
             {userLogin ? (
               <>
-                <IconButton onClick={handleOpenUserMenu}>
+                {/* <IconButton onClick={handleOpenUserMenu}>
                   <Avatar
                     src="/broken-image.jpg"
                     alt="User Avatar"
@@ -198,8 +198,8 @@ function Header() {
                   onClose={handleCloseUserMenu}
                   anchorOrigin={{ vertical: "top", horizontal: "right" }}
                   transformOrigin={{ vertical: "top", horizontal: "right" }}
-                >
-                  {/* <MenuItem
+                > */}
+                {/* <MenuItem
                     onClick={() => {
                       handleCloseUserMenu();
                       navigate("/profile");
@@ -208,7 +208,7 @@ function Header() {
                     <Typography textAlign="center">Profile</Typography>
                   </MenuItem> */}
 
-                  {/* <MenuItem
+                {/* <MenuItem
                     onClick={() => {
                       handleCloseUserMenu();
                     }}
@@ -216,10 +216,21 @@ function Header() {
                     <Typography textAlign="center">Account</Typography>
                   </MenuItem> */}
 
-                  <MenuItem onClick={handleLogout}>
+                {/* <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
-                </Menu>
+                </Menu> */}
+
+                <Button
+                  onClick={handleLogout}
+                  sx={{
+                    color: "white",
+                    textTransform: "capitalize",
+                    fontWeight: "1em"
+                  }}
+                >
+                  Logout
+                </Button>
               </>
             ) : (
               <Button
