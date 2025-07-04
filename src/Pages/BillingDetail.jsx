@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { userOrder } from "../Firebase/firebaseFunctions";
 
 // Validation schema
 const billingSchema = yup.object({
@@ -40,7 +41,7 @@ const BillingDetail = () => {
     mode: "onSubmit",
   });
 
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
     const paymentMethodFull =
       formData.payment === "cod" ? "Cash on Delivery" : "Bank Transfer";
 
@@ -52,6 +53,8 @@ const BillingDetail = () => {
       payment: paymentMethodFull,
     };
 
+    await userOrder(finalOrderData);
+
     console.log("🧾 Final Order Data:", finalOrderData);
 
     // toast.success("🎉 Thank you! Your order has been placed.", {
@@ -61,25 +64,36 @@ const BillingDetail = () => {
     //   onClose: () => navigate("/"),
     // });
 
-    toast.custom(
-      <div
-        style={{
-          background: "rgba(255, 255, 255, 0.05)",
-          backdropFilter: "blur(10px)",
-          color: "white",
-          padding: "12px 20px",
-          borderRadius: "10px",
-          fontSize: "14px",
-        }}
-      >
-        🎉 Thank you! Your order has been placed.
-      </div>,
-      {
-        position: "top-center",
-        duration: 2500,
-        onClose: () => navigate("/"),
-      }
-    );
+    // toast("🎉 Thank you! Your order has been placed.", {
+    //   position: "top-center",
+    //   autoClose: 2500,
+    //   onClose: () => navigate("/"),
+    //   style: {
+    //     background: "rgba(255, 255, 255, 0.05)",
+    //     backdropFilter: "blur(10px)",
+    //     color: "white",
+    //     padding: "12px 20px",
+    //     borderRadius: "10px",
+    //     fontSize: "14px",
+    //   },
+    // });
+
+    toast("🎉 Thank you! Your order has been placed.", {
+      position: "top-center",
+      autoClose: 2500,
+      onClose: () => navigate("/"),
+      style: {
+        background: "rgba(0, 0, 0, 0.7)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        color: "white",
+        padding: "14px 22px",
+        borderRadius: "10px",
+        fontSize: "15px",
+        fontWeight: "500",
+        textAlign: "center",
+      },
+    });
   };
 
   const mode = useSelector((state) => state.theme.mode);

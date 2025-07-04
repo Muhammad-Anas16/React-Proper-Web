@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import { Link, useNavigate } from "react-router";
+import { Link, Links, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Redux/Theme/ThemeSlice";
 import { ToastContainer, toast } from "react-toastify";
@@ -214,12 +214,14 @@ function Header() {
                   }}
                 >
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">
-                      Manage Account
-                    </Typography>
+                    <Typography textAlign="center">Manage Account</Typography>
                   </MenuItem>
 
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    component={Link}
+                    to="/order"
+                    onClick={handleCloseUserMenu}
+                  >
                     <Typography textAlign="center">My Order</Typography>
                   </MenuItem>
 
