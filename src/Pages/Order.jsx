@@ -10,16 +10,15 @@ const Order = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const product = await getUserOrder();
-        setOrdered(product);
+        setOrdered(Array.isArray(product) ? product : []);
       } else {
         console.log("No user logged in.");
       }
     });
-
-    console.log(ordered);
-
     return () => unsubscribe();
   }, []);
+
+  ordered.map((p) => console.log(p));
 
   return (
     <div>

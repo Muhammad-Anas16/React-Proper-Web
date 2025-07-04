@@ -48,14 +48,25 @@ function Header() {
         toast.success("✅ Sign-out successful", {
           position: "top-center",
           autoClose: 2500,
-          theme: "colored",
+          // theme: "colored",
           onClose: () => navigate("/"),
+          style: {
+            background: "rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            color: "white",
+            padding: "14px 22px",
+            borderRadius: "10px",
+            fontSize: "15px",
+            fontWeight: "500",
+            textAlign: "center",
+          },
         });
       })
       .catch((error) => {
         toast.error(error.message || "An error happened!", {
           position: "top-center",
-          autoClose: 2500,
+          autoClose: 4500,
           theme: "colored",
         });
       });
@@ -214,7 +225,7 @@ function Header() {
                   }}
                 >
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">Manage Account</Typography>
+                    <Typography textAlign="center">Account</Typography>
                   </MenuItem>
 
                   <MenuItem
@@ -225,9 +236,9 @@ function Header() {
                     <Typography textAlign="center">My Order</Typography>
                   </MenuItem>
 
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  {/* <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">Cancellations</Typography>
-                  </MenuItem>
+                  </MenuItem> */}
 
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>

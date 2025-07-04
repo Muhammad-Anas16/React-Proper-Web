@@ -51,6 +51,7 @@ const BillingDetail = () => {
       productTitle: checkData?.title,
       productPrice: checkData?.price,
       payment: paymentMethodFull,
+      time: new Date().toISOString().split("T")[0],
     };
 
     await userOrder(finalOrderData);

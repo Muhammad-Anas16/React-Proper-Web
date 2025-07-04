@@ -44,7 +44,7 @@ export const getUserOrder = async () => {
 
         if (docSnap.exists()) {
             const data = docSnap.data();
-            console.log("User Order:", data.orderedProduct); 
+            console.log("User Order:", data.orderedProduct);
             return data.orderedProduct;
         } else {
             console.log("No order found for user.");
