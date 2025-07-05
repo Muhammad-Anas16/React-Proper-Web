@@ -33,12 +33,9 @@ const App = () => {
     if (user) {
       const uid = user.uid;
       dispatch(setIsLogin(uid));
-      // setDetail(user);
-      // ...
+      // console.log(user);
     } else {
       dispatch(setIsLogin(null));
-
-      // console.log("user is Not Login");
     }
   });
 
@@ -49,7 +46,7 @@ const App = () => {
   // console.log(mode)
 
   const location = useLocation();
-  const hideHeaderPath = ["/auth", "/auth/signup", "/auth/forgetpassword"];
+  const hideHeaderPath = ["/auth", "/auth/signup", "/auth/forgetpassword", "/order"];
   const whenHideHeader = hideHeaderPath.includes(location?.pathname);
 
   return (

@@ -43,41 +43,21 @@ const BillingDetail = () => {
 
   const onSubmit = async (formData) => {
     const paymentMethodFull =
-      formData.payment === "cod" ? "Cash on Delivery" : "Bank Transfer";
+      formData.payment === "cod" ? "Cash" : "Bank";
 
     const finalOrderData = {
       ...formData,
       productId: checkData?.id,
-      productTitle: checkData?.title,
-      productPrice: checkData?.price,
+      // productTitle: checkData?.title,
+      // productPrice: checkData?.price,
       payment: paymentMethodFull,
+      Status: "ordered",
       time: new Date().toISOString().split("T")[0],
     };
 
-    await userOrder(finalOrderData);
+    await userOrder([finalOrderData]);
 
     console.log("🧾 Final Order Data:", finalOrderData);
-
-    // toast.success("🎉 Thank you! Your order has been placed.", {
-    //   position: "top-center",
-    //   autoClose: 2500,
-    //   theme: "colored",
-    //   onClose: () => navigate("/"),
-    // });
-
-    // toast("🎉 Thank you! Your order has been placed.", {
-    //   position: "top-center",
-    //   autoClose: 2500,
-    //   onClose: () => navigate("/"),
-    //   style: {
-    //     background: "rgba(255, 255, 255, 0.05)",
-    //     backdropFilter: "blur(10px)",
-    //     color: "white",
-    //     padding: "12px 20px",
-    //     borderRadius: "10px",
-    //     fontSize: "14px",
-    //   },
-    // });
 
     toast("🎉 Thank you! Your order has been placed.", {
       position: "top-center",

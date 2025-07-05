@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useSelector } from "react-redux";
+import LoginGoogleBtn from "./LoginGoogle";
 
 // Validation Schema
 const loginSchema = yup.object({
@@ -165,6 +166,8 @@ const Login = () => {
           >
             {isSubmitting ? "Please wait for few seconds..." : "Log In"}
           </button>
+
+          <LoginGoogleBtn />
 
           {/* Signup Link */}
           <div className="mt-4 text-center">
