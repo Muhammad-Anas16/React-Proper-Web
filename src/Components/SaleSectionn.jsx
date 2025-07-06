@@ -146,8 +146,8 @@ const SaleSection = () => {
                       // }}
                       className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     >
-                      <LocalGroceryStoreOutlinedIcon fontSize="small" /> Shop
-                      Now
+                      <LocalGroceryStoreOutlinedIcon fontSize="small" />
+                      {" "} Add to Cart
                     </button>
                   </div>
                   <div className="mt-1 text-center">

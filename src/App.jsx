@@ -46,7 +46,12 @@ const App = () => {
   // console.log(mode)
 
   const location = useLocation();
-  const hideHeaderPath = ["/auth", "/auth/signup", "/auth/forgetpassword", "/order"];
+  const hideHeaderPath = [
+    "/auth",
+    "/auth/signup",
+    "/auth/forgetpassword",
+    "/order",
+  ];
   const whenHideHeader = hideHeaderPath.includes(location?.pathname);
 
   return (

@@ -1,6 +1,7 @@
 // StickyHeadTable.jsx
 import * as React from "react";
 import {
+  Avatar,
   Box,
   Paper,
   Table,
@@ -74,11 +75,22 @@ export default function StickyHeadTable({ data }) {
                   <TableRow key={index}>
                     <TableCell
                       sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
                         color: mode === "dark" ? "#e5e7eb" : "#1f2937",
                         backgroundColor:
                           mode === "dark" ? "#111827" : "#ffffff",
                       }}
                     >
+                      <Avatar
+                        alt="Remy Sharp"
+                        src={
+                          row?.matchedData?.images ||
+                          row?.matchedData?.images[0] ||
+                          "/static/images/avatar/1.jpg"
+                        }
+                      />
                       {row?.matchedData?.title || "N/A"}
                     </TableCell>
                     <TableCell
