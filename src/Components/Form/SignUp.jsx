@@ -84,8 +84,7 @@ const SignUp = () => {
 
       await updateProfile(auth.currentUser, {
         displayName: username,
-        photoURL:
-          "https://static.vecteezy.com/system/resources/previews/024/983/914/non_2x/simple-user-default-icon-free-png.png",
+        photoURL: "https://media.istockphoto.com/id/2171382633/vector/user-profile-icon-anonymous-person-symbol-blank-avatar-graphic-vector-illustration.jpg?s=612x612&w=0&k=20&c=ZwOF6NfOR0zhYC44xOX06ryIPAUhDvAajrPsaZ6v1-w=",
       });
 
       await addUser({
@@ -94,7 +93,7 @@ const SignUp = () => {
         emailVerified: user.emailVerified,
         phoneNumber: user.phoneNumber,
         photoURL: user.photoURL,
-      })
+      });
 
       toast.success("🎉 Account created successfully!", {
         position: "top-center",

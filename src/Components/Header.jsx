@@ -17,7 +17,7 @@ import { toggleTheme } from "../Redux/Theme/ThemeSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../Firebase/Firebase";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Avatar } from "@mui/material";
 
 const pages = [
@@ -33,6 +33,7 @@ function Header() {
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   const mode = useSelector((state) => state.theme.mode);
 
@@ -41,6 +42,11 @@ function Header() {
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
+  onAuthStateChanged(auth, (currentUser) => {
+    currentUser ? setUser(currentUser) : setUser(null);
+  });
+
+  // console.log(user?.photoURL);
   const handleLogout = () => {
     handleCloseUserMenu();
     signOut(auth)
@@ -182,14 +188,14 @@ function Header() {
                 <DarkModeOutlinedIcon
                   sx={{
                     color: "white",
-                    fontSize: "1.2em",
+                    fontSize: "1.1em",
                   }}
                 />
               ) : (
                 <LightModeOutlinedIcon
                   sx={{
                     color: "white",
-                    fontSize: "1.2em",
+                    fontSize: "1.1em",
                   }}
                 />
               )}
@@ -200,9 +206,12 @@ function Header() {
               <>
                 <IconButton onClick={handleOpenUserMenu}>
                   <Avatar
-                    src="/broken-image.jpg"
+                    src={user?.photoURL || "/broken-image.jpg"}
                     alt="User Avatar"
-                    sx={{ width: 32, height: 32 }}
+                    sx={{
+                      width: 25,
+                      height: 25,
+                    }}
                   />
                 </IconButton>
 
@@ -224,7 +233,11 @@ function Header() {
                     },
                   }}
                 >
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    component={Link}
+                    to="/profile"
+                    onClick={handleCloseUserMenu}
+                  >
                     <Typography textAlign="center">Account</Typography>
                   </MenuItem>
 
@@ -235,10 +248,6 @@ function Header() {
                   >
                     <Typography textAlign="center">My Order</Typography>
                   </MenuItem>
-
-                  {/* <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">Cancellations</Typography>
-                  </MenuItem> */}
 
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>

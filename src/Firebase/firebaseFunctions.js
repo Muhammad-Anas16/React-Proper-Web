@@ -133,3 +133,32 @@ export const Google = async () => {
         console.error("Credential:", credential);
     }
 };
+
+export const userCart = async (cartList) => {
+    const user = auth.currentUser;
+    if (!user) return console.error("User not logged in");
+
+    if (!Array.isArray(cartList)) return console.error("Product list must be an array");
+
+    const CartRef = doc(db, "carts", user.uid);
+
+    try {
+        const docSnap = await getDoc(CartRef);
+        const oldCarts = docSnap.data()?.CartedProduct || [];
+
+        const newCarts = cartList.map(item => ({
+            ...item,
+            CartedAt: new Date().toISOString(),
+        }));
+
+        await setDoc(CartRef, {
+            userId: user.uid,
+            cartProduct: [...oldCarts, ...newCarts],
+            createdAt: docSnap.data()?.createdAt || new Date().toISOString(),
+        }, { merge: true });
+
+        console.log("Cart saved successfully.");
+    } catch (err) {
+        console.error("Error saving Cart:", err);
+    }
+};

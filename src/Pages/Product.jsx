@@ -27,22 +27,17 @@ const Product = () => {
     (category ? filterCategory.length : allProducts.length) / 10
   ); // Total Products QTY
 
-  // const HandleNextPagination = () => {
-  //   setPage((prev) => prev + 1);
-  //   setInitialProducts((prev) => prev + 10);
-  //   setAddProducts((prev) => prev + 10);
-  // };
-
-  // const HandleBeforePagination = () => {
-  //   setPage((prev) => prev - 1);
-  //   setInitialProducts((prev) => prev - 10);
-  //   setAddProducts((prev) => prev - 10);
-  // };
-
   const handlePageChange = (event, value) => {
     setPage(value);
     setInitialProducts((value - 1) * 10);
     setAddProducts(value * 10);
+  };
+
+  const HandleAddToCart = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const cartID = e.currentTarget.id;
+    console.log("Cart ID :", cartID);
   };
 
   // console.log(page);
@@ -76,9 +71,12 @@ const Product = () => {
                   src={item?.images[0]}
                 />
                 {userLogin && (
-                  <button className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <LocalGroceryStoreOutlinedIcon fontSize="small" />
-                    {" "} Add to Cart
+                  <button
+                    id={item.id}
+                    onClick={HandleAddToCart}
+                    className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  >
+                    <LocalGroceryStoreOutlinedIcon fontSize="small" /> Shop Now
                   </button>
                 )}
               </div>

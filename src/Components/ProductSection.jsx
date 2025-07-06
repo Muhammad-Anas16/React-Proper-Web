@@ -2,9 +2,6 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
-import Loader from "./Loading";
-import { db } from "../Firebase/Firebase";
-import { collection, addDoc } from "firebase/firestore";
 
 const ProductSection = () => {
   const mode = useSelector((state) => state.theme.mode);
@@ -18,24 +15,12 @@ const ProductSection = () => {
     setIsLoading(true);
   }, 3000);
 
-  // const HandleAddToCard = async (image, title, price) => {
-  //   if (!userLogin) {
-  //     navigate("/auth");
-  //     return;
-  //   }
-
-  //   try {
-  //     const docRef = await addDoc(collection(db, "carts"), {
-  //       image,
-  //       title,
-  //       price,
-  //       uid: userLogin,
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // };
+  const HandleAddToCart = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const cartID = e.currentTarget.id;
+    console.log("Cart ID :", cartID);
+  };
 
   return (
     <section
@@ -81,21 +66,12 @@ const ProductSection = () => {
                       className="object-cover w-full h-full p-2"
                       src={item?.images[0]}
                     />
-                    {/* Show Add to Cart only when user is logged in */}
                     <button
-                      // onClick={(e) => {
-                      //   e.preventDefault();
-                      //   e.stopPropagation();
-                      //   HandleAddToCard(
-                      //     item?.images[0],
-                      //     item?.title,
-                      //     item?.price
-                      //   );
-                      // }}
+                      onClick={HandleAddToCart}
+                      id={item.id}
                       className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     >
-                      <LocalGroceryStoreOutlinedIcon fontSize="small" />
-                      {" "} Add to Cart
+                      <LocalGroceryStoreOutlinedIcon fontSize="small" /> Shop Now
                     </button>
                   </div>
                   <div className="mt-1 text-center">
@@ -143,6 +119,5 @@ const ProductSection = () => {
     </section>
   );
 };
-
 
 export default ProductSection;

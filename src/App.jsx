@@ -21,6 +21,7 @@ import { setCustomProducts } from "./Redux/CustomProduct/CustomProductSlice";
 import { customProductData } from "./Components/CustomProduct/cutomProductsData";
 import { Box } from "@mui/material";
 import Order from "./Pages/Order";
+import Profile from "./Components/Profile";
 
 const App = () => {
   Shop();
@@ -51,6 +52,7 @@ const App = () => {
     "/auth/signup",
     "/auth/forgetpassword",
     "/order",
+    "/profile",
   ];
   const whenHideHeader = hideHeaderPath.includes(location?.pathname);
 
@@ -68,6 +70,7 @@ const App = () => {
         <Route path="/product" element={<Product />} /> {/* For all Products */}
         <Route path="/product/:category" element={<Product />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/:id">
           <Route index element={<ProductDetail />} />
           <Route path="billing" element={<BillingDetail />} />
