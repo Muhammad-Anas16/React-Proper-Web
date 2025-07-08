@@ -5,6 +5,9 @@ import { getUserOrder } from "../Firebase/firebaseFunctions";
 import { auth } from "../Firebase/Firebase";
 import { useSelector } from "react-redux";
 import StickyHeadTable from "../Components/Table";
+import SpanningTable from "../Components/AdminTable";
+import { Box, Paper, Stack } from "@mui/material";
+import UserDetail from "../Components/UserDetail";
 
 const Order = () => {
   const mode = useSelector((state) => state.theme.mode); // for Theme
@@ -29,11 +32,43 @@ const Order = () => {
 
     return () => unsubscribe();
   }, []);
+  console.log(ordered);
 
   return (
-    <div>
-      <StickyHeadTable data={ordered} />
-    </div>
+    <Box
+      sx={{
+        px: { xs: 2, sm: 4 },
+        mt: { xs: 4, sm: 6 }, // ✅ Reduced top spacing
+        backgroundColor: mode === "dark" ? "#111827" : "#ffffff",
+        color: mode === "dark" ? "#f3f4f6" : "#4b5563",
+        borderTop: "1px solid",
+        borderColor: mode === "dark" ? "#374151" : "#d1d5db",
+        minHeight: "100vh",
+      }}
+    >
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 1200,
+          mx: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        <UserDetail />
+        <Paper
+          elevation={3}
+          sx={{
+            p: { xs: 2, sm: 3 },
+            borderRadius: 2,
+            backgroundColor: mode === "dark" ? "#1f2937" : "#fafafa",
+          }}
+        >
+          <StickyHeadTable data={ordered} />
+        </Paper>
+      </Box>
+    </Box>
   );
 };
 

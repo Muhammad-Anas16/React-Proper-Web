@@ -82,7 +82,7 @@ function Header() {
     <AppBar
       position="static"
       sx={{
-        backgroundColor: mode == "light" ? "#6200EE" : "#202020",
+        backgroundColor: mode == "light" ? "#E7000B" : "#202020",
         boxShadow: 1,
       }}
     >
