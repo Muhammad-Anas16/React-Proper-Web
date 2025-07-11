@@ -1,5 +1,5 @@
 // firebaseFunctions.js
-import { doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, deleteDoc, arrayUnion } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "./Firebase";
 
@@ -12,21 +12,51 @@ export const addUser = async (data) => { // add User in database
     }
 
     const userId = user.uid;
-    const orderRef = doc(db, "User", userId);
+    const userRef = doc(db, "User", userId);
 
     try {
         await setDoc(
-            orderRef,
+            userRef,
             {
                 userId,
-                data,
-                createdAt: new Date().toISOString(),
+                data: {
+                    ...data,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                },
             },
             { merge: true }
         );
         console.log("Sign Up successfully.");
     } catch (err) {
         console.error("Error Sign Up:", err);
+    }
+};
+
+export const updateUserProfile = async (userId, userData) => {
+    try {
+        const userRef = doc(db, "User", userId);
+        await updateDoc(userRef, {
+            data: {
+                ...userData,
+                updatedAt: new Date().toISOString(),
+            },
+        });
+        console.log("Profile updated successfully.");
+    } catch (err) {
+        console.error("Error updating profile:", err);
+        throw err;
+    }
+};
+
+export const deleteUserProfile = async (userId) => {
+    try {
+        const userRef = doc(db, "User", userId);
+        await deleteDoc(userRef);
+        console.log("User profile deleted successfully.");
+    } catch (err) {
+        console.error("Error deleting user profile:", err);
+        throw err;
     }
 };
 
