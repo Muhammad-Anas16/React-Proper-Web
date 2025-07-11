@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -19,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../Firebase/Firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Avatar } from "@mui/material";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
 const pages = [
   { name: "Home", path: "/" },
@@ -42,11 +43,12 @@ function Header() {
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
-  onAuthStateChanged(auth, (currentUser) => {
-    currentUser ? setUser(currentUser) : setUser(null);
-  });
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      currentUser ? setUser(currentUser) : setUser(null);
+    });
+  }, [user]);
 
-  // console.log(user?.photoURL);
   const handleLogout = () => {
     handleCloseUserMenu();
     signOut(auth)
@@ -201,6 +203,10 @@ function Header() {
               )}
             </IconButton>
 
+            <IconButton component={Link} to="/cart" sx={{ color: "white" }}>
+              <ShoppingCartOutlinedIcon fontSize="medium" />
+            </IconButton>
+
             {/* User Section */}
             {userLogin ? (
               <>
@@ -211,6 +217,8 @@ function Header() {
                     sx={{
                       width: 25,
                       height: 25,
+                      border: "2px solid white",
+                      backgroundColor: "white",
                     }}
                   />
                 </IconButton>

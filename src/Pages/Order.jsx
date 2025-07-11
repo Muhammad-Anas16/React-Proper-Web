@@ -12,10 +12,12 @@ import UserDetail from "../Components/UserDetail";
 const Order = () => {
   const mode = useSelector((state) => state.theme.mode); // for Theme
   const [ordered, setOrdered] = useState([]);
+  const [isUser, setIsUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        setIsUser(user);
         const product = await getUserOrder();
         if (Array.isArray(product)) {
           setOrdered(product); // ✅ Set directly
@@ -32,13 +34,14 @@ const Order = () => {
 
     return () => unsubscribe();
   }, []);
-  console.log(ordered);
+  // console.log(ordered);
+  // console.log(isUser);
 
   return (
     <Box
       sx={{
         px: { xs: 2, sm: 4 },
-        mt: { xs: 4, sm: 6 }, // ✅ Reduced top spacing
+        py: { xs: 4, sm: 6 }, // ✅ Reduced top spacing
         backgroundColor: mode === "dark" ? "#111827" : "#ffffff",
         color: mode === "dark" ? "#f3f4f6" : "#4b5563",
         borderTop: "1px solid",
@@ -53,10 +56,10 @@ const Order = () => {
           mx: "auto",
           display: "flex",
           flexDirection: "column",
-          gap: 4,
+          // gap: 2,
         }}
       >
-        <UserDetail />
+        <UserDetail user={isUser} />
         <Paper
           elevation={3}
           sx={{

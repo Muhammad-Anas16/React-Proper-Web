@@ -15,11 +15,16 @@ const ProductSection = () => {
     setIsLoading(true);
   }, 3000);
 
-  const HandleAddToCart = async (e) => {
+  const HandleAddToCart = async (e, item) => {
     e.preventDefault();
     e.stopPropagation();
-    const cartID = e.currentTarget.id;
-    console.log("Cart ID :", cartID);
+    await addToCart({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      image: item.images[0],
+      quantity: 1,
+    });
   };
 
   return (
@@ -67,11 +72,12 @@ const ProductSection = () => {
                       src={item?.images[0]}
                     />
                     <button
-                      onClick={HandleAddToCart}
+                      onClick={(e) => HandleAddToCart(e, item)}
                       id={item.id}
                       className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     >
-                      <LocalGroceryStoreOutlinedIcon fontSize="small" /> Shop Now
+                      <LocalGroceryStoreOutlinedIcon fontSize="small" /> Shop
+                      Now
                     </button>
                   </div>
                   <div className="mt-1 text-center">

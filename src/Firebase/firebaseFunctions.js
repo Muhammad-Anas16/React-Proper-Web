@@ -134,31 +134,58 @@ export const Google = async () => {
     }
 };
 
-export const userCart = async (cartList) => {
+export const addToCart = async (product) => {
     const user = auth.currentUser;
     if (!user) return console.error("User not logged in");
-
-    if (!Array.isArray(cartList)) return console.error("Product list must be an array");
+    if (!product || !product.id) return console.error("Invalid product");
 
     const CartRef = doc(db, "carts", user.uid);
-
     try {
         const docSnap = await getDoc(CartRef);
-        const oldCarts = docSnap.data()?.CartedProduct || [];
-
-        const newCarts = cartList.map(item => ({
-            ...item,
-            CartedAt: new Date().toISOString(),
-        }));
-
+        const oldCarts = docSnap.data()?.cartProduct || [];
+        // Check if product already exists in cart
+        const exists = oldCarts.find(item => item.id === product.id);
+        let newCarts;
+        if (exists) {
+            // If exists, update quantity
+            newCarts = oldCarts.map(item =>
+                item.id === product.id
+                    ? { ...item, quantity: (item.quantity || 1) + (product.quantity || 1) }
+                    : item
+            );
+        } else {
+            newCarts = [...oldCarts, { ...product, quantity: product.quantity || 1, CartedAt: new Date().toISOString() }];
+        }
         await setDoc(CartRef, {
             userId: user.uid,
-            cartProduct: [...oldCarts, ...newCarts],
+            cartProduct: newCarts,
             createdAt: docSnap.data()?.createdAt || new Date().toISOString(),
         }, { merge: true });
-
-        console.log("Cart saved successfully.");
+        console.log("Product added to cart successfully.");
     } catch (err) {
-        console.error("Error saving Cart:", err);
+        console.error("Error adding to cart:", err);
     }
 };
+
+
+export const deleteCart = async (productId) => {
+    const user = auth.currentUser;
+    if (!user) return console.error("User not logged in");
+    if (!productId) return console.error("Invalid product ID");
+
+    const CartRef = doc(db, "carts", user.uid);
+    try {
+        const docSnap = await getDoc(CartRef);
+        const oldCarts = docSnap.data()?.cartProduct || [];
+        const newCarts = oldCarts.filter(item => item.id !== productId);
+        await setDoc(CartRef, {
+            userId: user.uid,
+            cartProduct: newCarts,
+            createdAt: docSnap.data()?.createdAt || new Date().toISOString(),
+        }, { merge: true });
+        console.log("Product removed from cart successfully.");
+    } catch (err) {
+        console.error("Error removing from cart:", err);
+    }
+};
+

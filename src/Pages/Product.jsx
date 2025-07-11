@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
 import { Stack, Pagination, PaginationItem } from "@mui/material";
+import { addToCart } from "../Firebase/firebaseFunctions";
 
 const Product = () => {
   const { category } = useParams();
@@ -33,11 +34,22 @@ const Product = () => {
     setAddProducts(value * 10);
   };
 
-  const HandleAddToCart = async (e) => {
+  const HandleAddToCart = async (e, item) => {
     e.preventDefault();
     e.stopPropagation();
-    const cartID = e.currentTarget.id;
-    console.log("Cart ID :", cartID);
+    try {
+      await addToCart({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        image: item.images[0],
+        quantity: 1,
+      });
+      // Optionally show a toast/notification here
+    } catch (err) {
+      // Optionally show an error notification
+      console.error("Add to cart error:", err);
+    }
   };
 
   // console.log(page);
@@ -72,8 +84,7 @@ const Product = () => {
                 />
                 {userLogin && (
                   <button
-                    id={item.id}
-                    onClick={HandleAddToCart}
+                    onClick={(e) => HandleAddToCart(e, item)}
                     className="absolute bottom-0 right-0 left-0 bg-black bg-opacity-80 text-white px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   >
                     <LocalGroceryStoreOutlinedIcon fontSize="small" /> Shop Now

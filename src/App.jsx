@@ -21,6 +21,7 @@ import { setCustomProducts } from "./Redux/CustomProduct/CustomProductSlice";
 import { customProductData } from "./Components/CustomProduct/cutomProductsData";
 import { Box } from "@mui/material";
 import Order from "./Pages/Order";
+import Cart from './Components/Cart';
 
 const App = () => {
   Shop();
@@ -69,6 +70,7 @@ const App = () => {
         <Route path="/product" element={<Product />} /> {/* For all Products */}
         <Route path="/product/:category" element={<Product />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/:id">
           <Route index element={<ProductDetail />} />
           <Route path="billing" element={<BillingDetail />} />

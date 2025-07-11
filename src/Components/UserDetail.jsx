@@ -5,9 +5,10 @@ import { useSelector } from "react-redux";
 export default function ProfileHeader({ user }) {
   const mode = useSelector((state) => state.theme.mode);
 
+  // console.log(user);
+
   return (
-    <Box sx={{ width: "100%", pb: { xs: 8, sm: 10 } }}>
-      {/* Cover Section */}
+    <Box sx={{ width: "100%", pb: { xs: 5, sm: 5 } }}>
       <Box
         sx={{
           width: "100%",
@@ -22,7 +23,8 @@ export default function ProfileHeader({ user }) {
           sx={{
             width: "100%",
             height: "100%",
-            backgroundColor: "black",
+            // backgroundColor: "black",
+            backgroundColor: "#8f8f8f",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -30,9 +32,9 @@ export default function ProfileHeader({ user }) {
 
         {/* Avatar Overlay */}
         <Avatar
-          alt={user?.name || "Profile"}
+          alt={"Profile"}
           src={
-            user?.avatar ||
+            user?.photoURL ||
             "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
           }
           sx={{
@@ -44,6 +46,7 @@ export default function ProfileHeader({ user }) {
             height: { xs: 90, sm: 110, md: 130 },
             border: "4px solid #fff",
             bgcolor: "#fff",
+            p: 0,
           }}
         />
       </Box>
@@ -60,31 +63,31 @@ export default function ProfileHeader({ user }) {
       >
         <Stack spacing={1} alignItems={{ xs: "center", sm: "flex-start" }}>
           <Typography variant="h6" fontWeight={600}>
-            {user?.name || "John Doe"}
+            {user?.displayName || "UserName"}
           </Typography>
 
           <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            {user?.email || "user@example.com"}
+            {user?.email || "UserName@UserName.com"}
           </Typography>
 
-          {user?.bio && (
+          {/* {user?.bio && (
             <Typography
               variant="body2"
               sx={{ mt: 1, textAlign: { xs: "center", sm: "left" } }}
             >
               {user.bio}
             </Typography>
-          )}
+          )} */}
 
-          <Divider sx={{ my: 1, width: "100%" }} />
+          {/* <Divider sx={{ my: 1, width: "100%" }} /> */}
 
-          <Typography variant="body2">
+          {/* <Typography variant="body2">
             <strong>Date of Birth:</strong> {user?.dob || "January 1, 2000"}
-          </Typography>
+          </Typography> */}
 
-          <Typography variant="body2">
+          {/* <Typography variant="body2">
             <strong>Phone:</strong> {user?.phone || "+92 300 0000000"}
-          </Typography>
+          </Typography> */}
         </Stack>
       </Box>
     </Box>
