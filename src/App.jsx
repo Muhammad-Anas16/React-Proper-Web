@@ -23,6 +23,7 @@ import { Box } from "@mui/material";
 import Order from "./Pages/Order";
 import Cart from './Components/Cart';
 import Profile from "./Pages/Profile";
+import AdminPanel from "./Pages/AdminPanel";
 
 const App = () => {
   Shop();
@@ -73,6 +74,7 @@ const App = () => {
         <Route path="/order" element={<Order />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin" element={<AdminPanel />} />
         <Route path="/:id">
           <Route index element={<ProductDetail />} />
           <Route path="billing" element={<BillingDetail />} />

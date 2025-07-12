@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { auth, db } from "../Firebase/Firebase";
 import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { updateProfile, deleteUser } from "firebase/auth";
+import { updateProfile, deleteUser, signOut } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -47,12 +47,17 @@ const Profile = () => {
     bio: "",
     address: "",
   });
+  const [adminPassword, setAdminPassword] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         await fetchUserData(currentUser.uid);
+        // Check localStorage for admin
+        const localAdmin = localStorage.getItem("isAdmin");
+        setIsAdmin(localAdmin === "true");
       } else {
         navigate("/auth");
       }
@@ -76,6 +81,8 @@ const Profile = () => {
           bio: data.data?.bio || "",
           address: data.data?.address || "",
         });
+        setIsAdmin(!!data.isAdmin);
+        localStorage.setItem("isAdmin", data.isAdmin ? "true" : "false");
       } else {
         // Create default user data if not exists
         setUserData({
@@ -95,6 +102,8 @@ const Profile = () => {
           bio: "",
           address: "",
         });
+        setIsAdmin(false);
+        localStorage.setItem("isAdmin", "false");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -116,7 +125,12 @@ const Profile = () => {
     try {
       setLoading(true);
       const userRef = doc(db, "User", user.uid);
-
+      let adminFlag = isAdmin;
+      if (adminPassword === "112233") {
+        adminFlag = true;
+        setIsAdmin(true);
+        localStorage.setItem("isAdmin", "true");
+      }
       // Update Firebase Auth profile
       await updateProfile(auth.currentUser, {
         displayName: formData.displayName,
@@ -138,11 +152,13 @@ const Profile = () => {
             "https://static.vecteezy.com/system/resources/previews/009/418/828/non_2x/shop-marketing-3d-icon-illustration-for-your-website-user-interface-and-presentation-3d-render-illustration-free-png.png",
           updatedAt: new Date().toISOString(),
         },
+        isAdmin: adminFlag,
       });
 
       // Refresh user data
       await fetchUserData(user.uid);
       setEditMode(false);
+      setAdminPassword("");
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -162,6 +178,7 @@ const Profile = () => {
 
       // Delete user from Firebase Auth
       await deleteUser(user);
+      await signOut(auth);
 
       toast.success("Account deleted successfully!");
       navigate("/");
@@ -171,6 +188,7 @@ const Profile = () => {
     } finally {
       setLoading(false);
       setDeleteDialog(false);
+      navigate("/");
     }
   };
 
@@ -266,6 +284,7 @@ const Profile = () => {
                               bio: userData?.data?.bio || "",
                               address: userData?.data?.address || "",
                             });
+                            setAdminPassword("");
                           }}
                           sx={{
                             color: mode === "dark" ? "#e5e7eb" : "#1f2937",
@@ -411,6 +430,30 @@ const Profile = () => {
                       </Typography>
                     )}
                   </Box>
+
+                  {/* Admin Password */}
+                  {editMode && (
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary" mb={1}>
+                        Admin Password
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        name="adminPassword"
+                        value={adminPassword}
+                        onChange={e => setAdminPassword(e.target.value)}
+                        variant="outlined"
+                        size="small"
+                        type="password"
+                        placeholder="Enter admin password to become admin"
+                      />
+                      {isAdmin && (
+                        <Typography color="success.main" fontSize={13} mt={1}>
+                          You are an admin.
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
                 </Stack>
 
                 <Divider sx={{ my: 3 }} />
@@ -435,8 +478,7 @@ const Profile = () => {
             >
               Delete Account
             </Button>
-            )
-            {activeTab === 1 && <ProfileSettings />}
+            ){activeTab === 1 && <ProfileSettings />}
           </Box>
         </Paper>
       </Box>

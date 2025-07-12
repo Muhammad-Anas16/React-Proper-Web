@@ -16,7 +16,7 @@ import {
 import { useSelector } from "react-redux";
 import { useTheme } from "@mui/material/styles";
 
-export default function StickyHeadTable({ data }) {
+export default function StickyHeadTable({ data, enablePagination }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -25,12 +25,11 @@ export default function StickyHeadTable({ data }) {
   const custom = useSelector((state) => state.customProducts.customProducts);
 
   const [page, setPage] = React.useState(0);
-  const rowsPerPage = 10; // 👈 fixed value
+  const rowsPerPage = 10;
   const [detail, setDetail] = React.useState([]);
 
   React.useEffect(() => {
     if (!data || data.length === 0) return;
-
     const all = [...item, ...custom];
     const newDetails = data.map((entry) => {
       const product = all.find((p) => p.id === entry.productId);
@@ -39,19 +38,26 @@ export default function StickyHeadTable({ data }) {
         data: entry,
       };
     });
-
     setDetail(newDetails);
   }, [data, item, custom]);
 
-  // const handleChangePage = (_, newPage) => setPage(newPage);
+  const handleChangePage = (_, newPage) => setPage(newPage);
+
+  const statusColor = (status) => {
+    if (!status) return mode === "dark" ? "#374151" : "#e5e7eb";
+    if (status.toLowerCase().includes("delivered")) return "success.main";
+    if (status.toLowerCase().includes("cancel")) return "error.main";
+    if (status.toLowerCase().includes("pending")) return "warning.main";
+    return mode === "dark" ? "#9ca3af" : "#6b7280";
+  };
 
   return (
     <>
       <TableContainer
         sx={{
           maxHeight: 500,
-          backgroundColor: "transparent", // 🚫 no background
-          boxShadow: "none", // 🚫 no shadow
+          backgroundColor: "transparent",
+          boxShadow: "none",
         }}
       >
         <Table stickyHeader>
@@ -64,6 +70,8 @@ export default function StickyHeadTable({ data }) {
                     backgroundColor: mode === "dark" ? "#1f2937" : "#6200EE",
                     color: "#ffffff",
                     fontWeight: 600,
+                    fontSize: 16,
+                    letterSpacing: 0.5,
                   }}
                 >
                   {title}
@@ -74,33 +82,42 @@ export default function StickyHeadTable({ data }) {
 
           <TableBody>
             {detail
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .slice(enablePagination ? page * rowsPerPage : 0, enablePagination ? page * rowsPerPage + rowsPerPage : detail.length)
               .map((row, index) => (
-                <TableRow key={index}>
+                <TableRow key={index} hover sx={{ transition: "background 0.2s" }}>
                   <TableCell
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       gap: 2,
-                      // Keep row styling only (remove external wrappers)
                       backgroundColor: mode === "dark" ? "#111827" : "#ffffff",
                       color: mode === "dark" ? "#e5e7eb" : "#1f2937",
+                      fontWeight: 500,
+                      fontSize: 15,
+                      py: 2,
                     }}
                   >
                     <Avatar
                       alt={row?.matchedData?.title || "Product"}
-                      src={
-                        row?.matchedData?.images?.[0] ||
-                        "/static/images/avatar/1.jpg"
-                      }
+                      src={row?.matchedData?.images?.[0] || "/static/images/avatar/1.jpg"}
+                      sx={{ width: 48, height: 48, mr: 2 }}
                     />
-                    {row?.matchedData?.title || "N/A"}
+                    <Box>
+                      <Box sx={{ fontWeight: 600, fontSize: 15 }}>
+                        {row?.matchedData?.title || "N/A"}
+                      </Box>
+                      <Box sx={{ fontSize: 13, color: mode === "dark" ? "#9ca3af" : "#6b7280" }}>
+                        {row?.matchedData?.category || ""}
+                      </Box>
+                    </Box>
                   </TableCell>
 
                   <TableCell
                     sx={{
                       backgroundColor: mode === "dark" ? "#111827" : "#ffffff",
                       color: mode === "dark" ? "#e5e7eb" : "#1f2937",
+                      fontWeight: 500,
+                      fontSize: 15,
                     }}
                   >
                     ${row?.matchedData?.price || "0"}
@@ -110,6 +127,8 @@ export default function StickyHeadTable({ data }) {
                     sx={{
                       backgroundColor: mode === "dark" ? "#111827" : "#ffffff",
                       color: mode === "dark" ? "#e5e7eb" : "#1f2937",
+                      fontWeight: 500,
+                      fontSize: 15,
                     }}
                   >
                     {row?.data?.time}
@@ -118,7 +137,10 @@ export default function StickyHeadTable({ data }) {
                   <TableCell
                     sx={{
                       backgroundColor: mode === "dark" ? "#111827" : "#ffffff",
-                      color: mode === "dark" ? "#e5e7eb" : "#1f2937",
+                      color: statusColor(row?.data?.Status),
+                      fontWeight: 700,
+                      fontSize: 15,
+                      textTransform: "capitalize",
                     }}
                   >
                     {row?.data?.Status}
@@ -129,19 +151,21 @@ export default function StickyHeadTable({ data }) {
         </Table>
       </TableContainer>
 
-      {/* <TablePagination
-        component="div"
-        rowsPerPageOptions={[]}
-        count={detail.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        sx={{
-          backgroundColor: "transparent",
-          boxShadow: "none",
-          mt: 0,
-        }}
-      /> */}
+      {enablePagination && detail.length > 10 && (
+        <TablePagination
+          component="div"
+          rowsPerPageOptions={[]}
+          count={detail.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          sx={{
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            mt: 0,
+          }}
+        />
+      )}
     </>
   );
 }

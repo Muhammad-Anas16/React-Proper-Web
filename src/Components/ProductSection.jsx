@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
+import { addToCart } from "../Firebase/firebaseFunctions";
 
 const ProductSection = () => {
   const mode = useSelector((state) => state.theme.mode);

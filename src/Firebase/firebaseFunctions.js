@@ -1,5 +1,5 @@
 // firebaseFunctions.js
-import { doc, setDoc, getDoc, updateDoc, deleteDoc, arrayUnion } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, deleteDoc, arrayUnion, collection, getDocs } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db, provider } from "./Firebase";
 
@@ -217,5 +217,84 @@ export const deleteCart = async (productId) => {
     } catch (err) {
         console.error("Error removing from cart:", err);
     }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const usersCol = collection(db, "User");
+    const snapshot = await getDocs(usersCol);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    return [];
+  }
+};
+
+export const getAllOrders = async () => {
+  try {
+    const ordersCol = collection(db, "orders");
+    const snapshot = await getDocs(ordersCol);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    return [];
+  }
+};
+
+export const updateAnyUserOrder = async (userId, orderedProduct) => {
+  try {
+    const orderRef = doc(db, "orders", userId);
+    await updateDoc(orderRef, { orderedProduct });
+    console.log("Order updated for user", userId);
+  } catch (err) {
+    console.error("Error updating user order:", err);
+  }
+};
+
+export const deleteAnyUserOrder = async (userId, orderIndex) => {
+  try {
+    const orderRef = doc(db, "orders", userId);
+    const docSnap = await getDoc(orderRef);
+    const oldOrders = docSnap.data()?.orderedProduct || [];
+    const newOrders = oldOrders.filter((_, idx) => idx !== orderIndex);
+    await updateDoc(orderRef, { orderedProduct: newOrders });
+    console.log("Order deleted for user", userId);
+  } catch (err) {
+    console.error("Error deleting user order:", err);
+  }
+};
+
+export const getCarouselImages = async () => {
+  try {
+    const docRef = doc(db, "carousel", "main");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data().images || [];
+    }
+    return [];
+  } catch (err) {
+    console.error("Error fetching carousel images:", err);
+    return [];
+  }
+};
+
+export const setCarouselImages = async (images) => {
+  try {
+    const docRef = doc(db, "carousel", "main");
+    await setDoc(docRef, { images });
+    console.log("Carousel images updated in Firestore.");
+  } catch (err) {
+    console.error("Error setting carousel images:", err);
+  }
+};
+
+export const deleteAllOrdersForUser = async (userId) => {
+  try {
+    const orderRef = doc(db, "orders", userId);
+    await deleteDoc(orderRef);
+    console.log("All orders deleted for user", userId);
+  } catch (err) {
+    console.error("Error deleting all orders for user:", err);
+  }
 };
 

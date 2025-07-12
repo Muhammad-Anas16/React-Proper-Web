@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../Firebase/Firebase";
-import { 
-  updatePassword, 
-  sendEmailVerification, 
+import {
+  updatePassword,
+  sendEmailVerification,
   reauthenticateWithCredential,
-  EmailAuthProvider 
+  EmailAuthProvider,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import {
@@ -27,6 +27,7 @@ import {
 import SecurityIcon from "@mui/icons-material/Security";
 import EmailIcon from "@mui/icons-material/Email";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { toggleTheme } from "../Redux/Theme/ThemeSlice";
 
 const ProfileSettings = () => {
   const mode = useSelector((state) => state.theme.mode);
@@ -39,8 +40,9 @@ const ProfileSettings = () => {
     emailNotifications: true,
     orderUpdates: true,
     promotionalEmails: false,
-    darkMode: mode === "dark",
   });
+
+  const dispatch = useDispatch();
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
@@ -56,17 +58,17 @@ const ProfileSettings = () => {
     try {
       setLoading(true);
       const user = auth.currentUser;
-      
+
       // Re-authenticate user before password change
       const credential = EmailAuthProvider.credential(
         user.email,
         currentPassword
       );
       await reauthenticateWithCredential(user, credential);
-      
+
       // Update password
       await updatePassword(user, newPassword);
-      
+
       toast.success("Password updated successfully!");
       setPasswordDialog(false);
       setCurrentPassword("");
@@ -99,9 +101,9 @@ const ProfileSettings = () => {
   };
 
   const handleSettingChange = (setting) => (event) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [setting]: event.target.checked
+      [setting]: event.target.checked,
     }));
   };
 
@@ -122,7 +124,13 @@ const ProfileSettings = () => {
         <Stack spacing={3}>
           {/* Security Section */}
           <Box>
-            <Typography variant="h6" mb={2} display="flex" alignItems="center" gap={1}>
+            <Typography
+              variant="h6"
+              mb={2}
+              display="flex"
+              alignItems="center"
+              gap={1}
+            >
               <SecurityIcon />
               Security
             </Typography>
@@ -134,10 +142,10 @@ const ProfileSettings = () => {
               >
                 Change Password
               </Button>
-              
+
               {!auth.currentUser?.emailVerified && (
                 <Alert severity="warning">
-                  Your email is not verified. 
+                  Your email is not verified.
                   <Button
                     size="small"
                     onClick={handleEmailVerification}
@@ -155,7 +163,13 @@ const ProfileSettings = () => {
 
           {/* Email Section */}
           <Box>
-            <Typography variant="h6" mb={2} display="flex" alignItems="center" gap={1}>
+            <Typography
+              variant="h6"
+              mb={2}
+              display="flex"
+              alignItems="center"
+              gap={1}
+            >
               <EmailIcon />
               Email Preferences
             </Typography>
@@ -178,7 +192,7 @@ const ProfileSettings = () => {
                 }
                 label="Order Updates"
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={
                   <Switch
                     checked={settings.promotionalEmails}
@@ -186,7 +200,7 @@ const ProfileSettings = () => {
                   />
                 }
                 label="Promotional Emails"
-              />
+              /> */}
             </Stack>
           </Box>
 
@@ -194,7 +208,13 @@ const ProfileSettings = () => {
 
           {/* App Settings */}
           <Box>
-            <Typography variant="h6" mb={2} display="flex" alignItems="center" gap={1}>
+            <Typography
+              variant="h6"
+              mb={2}
+              display="flex"
+              alignItems="center"
+              gap={1}
+            >
               <NotificationsIcon />
               App Settings
             </Typography>
@@ -203,7 +223,7 @@ const ProfileSettings = () => {
                 control={
                   <Switch
                     checked={settings.darkMode}
-                    onChange={handleSettingChange("darkMode")}
+                    onChange={() => dispatch(toggleTheme())}
                   />
                 }
                 label="Dark Mode"
@@ -214,7 +234,12 @@ const ProfileSettings = () => {
       </Paper>
 
       {/* Password Change Dialog */}
-      <Dialog open={passwordDialog} onClose={() => setPasswordDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={passwordDialog}
+        onClose={() => setPasswordDialog(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Change Password</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 1 }}>
@@ -245,13 +270,13 @@ const ProfileSettings = () => {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPasswordDialog(false)}>
-            Cancel
-          </Button>
-          <Button 
-            onClick={handlePasswordChange} 
+          <Button onClick={() => setPasswordDialog(false)}>Cancel</Button>
+          <Button
+            onClick={handlePasswordChange}
             variant="contained"
-            disabled={loading || !currentPassword || !newPassword || !confirmPassword}
+            disabled={
+              loading || !currentPassword || !newPassword || !confirmPassword
+            }
           >
             {loading ? "Updating..." : "Update Password"}
           </Button>
@@ -261,4 +286,4 @@ const ProfileSettings = () => {
   );
 };
 
-export default ProfileSettings; 
+export default ProfileSettings;

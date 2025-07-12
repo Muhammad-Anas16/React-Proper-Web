@@ -1,95 +1,179 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { getCarouselImages } from "../Firebase/firebaseFunctions";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-const images = [
-  {
-    name: "image1",
-    src: "https://www.apple.com/newsroom/images/2024/09/apple-debuts-iphone-16-pro-and-iphone-16-pro-max/tile/Apple-iPhone-16-Pro-hero-240909-lp.jpg.landing-big_2x.jpg",
-  },
-  {
-    name: "image2",
-    src: "https://cdn.mos.cms.futurecdn.net/eb6jW2oVkZEvS4Ms3MRdGZ.jpg",
-  },
+const defaultImages = [
+  "https://images.unsplash.com/photo-1519125323398-675f0ddb6308",
+  "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+  "https://images.unsplash.com/photo-1465101046530-73398c7f28ca",
 ];
 
 const Carousel = () => {
+  const [images, setImages] = useState(defaultImages);
   const [current, setCurrent] = useState(0);
-  const total = images.length;
-
-  const nextSlide = () => {
-    setCurrent((prev) => (prev + 1) % total);
-  };
-
-  const prevSlide = () => {
-    setCurrent((prev) => (prev - 1 + total) % total);
-  };
+  const [fade, setFade] = useState(false);
+  const intervalRef = useRef();
 
   useEffect(() => {
-    const interval = setInterval(nextSlide, 3000);
-    return () => clearInterval(interval);
-  }, [current]);
+    getCarouselImages().then((imgs) => {
+      if (imgs && imgs.length > 0) setImages(imgs);
+    });
+  }, []);
+
+  useEffect(() => {
+    startAutoSlide();
+    return () => stopAutoSlide();
+    // eslint-disable-next-line
+  }, [images, current]);
+
+  const startAutoSlide = () => {
+    stopAutoSlide();
+    intervalRef.current = setInterval(() => {
+      handleNext();
+    }, 3500);
+  };
+
+  const stopAutoSlide = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  };
+
+  const handlePrev = () => {
+    setFade(true);
+    setTimeout(() => {
+      setCurrent((prev) => (prev - 1 + images.length) % images.length);
+      setFade(false);
+    }, 200);
+  };
+
+  const handleNext = () => {
+    setFade(true);
+    setTimeout(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+      setFade(false);
+    }, 200);
+  };
+
+  if (!images.length) return null;
 
   return (
-    <section className="w-full max-w-screen-2xl mx-auto px-2 sm:px-4 lg:px-6 py-3">
-      <div className="relative w-full h-[70vh] sm:h-[75vh] md:h-[80vh] rounded-xl overflow-hidden shadow-lg">
-        {/* Slides */}
-        {images.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              current === index ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <img
-              src={image.src}
-              alt={image.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
-
-        {/* Prev Button */}
+    <div
+      style={{
+        width: "100%",
+        maxWidth: 800,
+        margin: "32px auto",
+        position: "relative",
+        borderRadius: 18,
+        overflow: "hidden",
+        boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)",
+        background: "#fff",
+        minHeight: 220,
+      }}
+    >
+      {/* Image */}
+      <div
+        style={{
+          width: "100%",
+          height: 0,
+          paddingBottom: "38%",
+          position: "relative",
+        }}
+      >
+        <img
+          src={images[current]}
+          alt={`carousel-${current}`}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: 18,
+            opacity: fade ? 0 : 1,
+            transition: "opacity 0.4s cubic-bezier(.4,0,.2,1)",
+            boxShadow: "0 2px 16px 0 rgba(0,0,0,0.10)",
+          }}
+        />
+        {/* Left Arrow */}
         <button
-          onClick={prevSlide}
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 z-10 bg-black/40 hover:bg-black/60 text-white rounded-full p-3"
+          onClick={handlePrev}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: 16,
+            transform: "translateY(-50%)",
+            background: "rgba(255,255,255,0.7)",
+            border: "none",
+            borderRadius: "50%",
+            width: 38,
+            height: 38,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            boxShadow: "0 2px 8px 0 rgba(0,0,0,0.10)",
+            zIndex: 2,
+          }}
+          aria-label="Previous"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            viewBox="0 0 6 10"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M5 1L1 5l4 4"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <ArrowBackIosNewIcon fontSize="small" />
         </button>
-
-        {/* Next Button */}
+        {/* Right Arrow */}
         <button
-          onClick={nextSlide}
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 z-10 bg-black/40 hover:bg-black/60 text-white rounded-full p-3"
+          onClick={handleNext}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: 16,
+            transform: "translateY(-50%)",
+            background: "rgba(255,255,255,0.7)",
+            border: "none",
+            borderRadius: "50%",
+            width: 38,
+            height: 38,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            boxShadow: "0 2px 8px 0 rgba(0,0,0,0.10)",
+            zIndex: 2,
+          }}
+          aria-label="Next"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            viewBox="0 0 6 10"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 1l4 4-4 4"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <ArrowForwardIosIcon fontSize="small" />
         </button>
       </div>
-    </section>
+      {/* Dots */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 16,
+          left: 0,
+          right: 0,
+          textAlign: "center",
+        }}
+      >
+        {images.map((_, idx) => (
+          <span
+            key={idx}
+            onClick={() => setCurrent(idx)}
+            style={{
+              display: "inline-block",
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              background: idx === current ? "#DB4444" : "#fff",
+              margin: "0 6px",
+              border: "2px solid #DB4444",
+              transition: "background 0.3s",
+              cursor: "pointer",
+              boxShadow: idx === current ? "0 0 6px #DB4444" : undefined,
+            }}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 

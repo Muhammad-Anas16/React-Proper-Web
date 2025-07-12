@@ -2,6 +2,7 @@ import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStore
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { addToCart } from "../Firebase/firebaseFunctions";
 
 const SaleSection = () => {
   const navigate = useNavigate();

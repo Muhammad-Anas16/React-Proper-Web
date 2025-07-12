@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import { Link, Links, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Redux/Theme/ThemeSlice";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,6 +20,8 @@ import { auth } from "../Firebase/Firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Avatar } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import SearchBar from "./SearchBar";
+import MobileSearch from "./MobileSearch";
 
 const pages = [
   { name: "Home", path: "/" },
@@ -35,6 +37,7 @@ function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const mode = useSelector((state) => state.theme.mode);
 
@@ -46,6 +49,7 @@ function Header() {
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       currentUser ? setUser(currentUser) : setUser(null);
+      setIsAdmin(localStorage.getItem("isAdmin") === "true");
     });
   }, [user]);
 
@@ -183,6 +187,11 @@ function Header() {
             ))}
           </Box>
 
+          {/* Search Bar - Desktop */}
+          <Box sx={{ display: { xs: "none", md: "flex" }, mx: 2 }}>
+            <SearchBar />
+          </Box>
+
           {/* Right Side Icons */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton onClick={() => dispatch(toggleTheme())}>
@@ -202,6 +211,11 @@ function Header() {
                 />
               )}
             </IconButton>
+
+            {/* Mobile Search */}
+            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <MobileSearch />
+            </Box>
 
             <IconButton component={Link} to="/cart" sx={{ color: "white" }}>
               <ShoppingCartOutlinedIcon fontSize="medium" />
@@ -256,7 +270,15 @@ function Header() {
                   >
                     <Typography textAlign="center">My Order</Typography>
                   </MenuItem>
-
+                  {isAdmin && (
+                    <MenuItem
+                      component={Link}
+                      to="/admin"
+                      onClick={handleCloseUserMenu}
+                    >
+                      <Typography textAlign="center">Admin</Typography>
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>

@@ -69,25 +69,6 @@ export default function ProfileHeader({ user }) {
           <Typography variant="body2" sx={{ opacity: 0.8 }}>
             {user?.email || "UserName@UserName.com"}
           </Typography>
-
-          {/* {user?.bio && (
-            <Typography
-              variant="body2"
-              sx={{ mt: 1, textAlign: { xs: "center", sm: "left" } }}
-            >
-              {user.bio}
-            </Typography>
-          )} */}
-
-          {/* <Divider sx={{ my: 1, width: "100%" }} /> */}
-
-          {/* <Typography variant="body2">
-            <strong>Date of Birth:</strong> {user?.dob || "January 1, 2000"}
-          </Typography> */}
-
-          {/* <Typography variant="body2">
-            <strong>Phone:</strong> {user?.phone || "+92 300 0000000"}
-          </Typography> */}
         </Stack>
       </Box>
     </Box>
