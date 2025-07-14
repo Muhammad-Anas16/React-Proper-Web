@@ -298,3 +298,37 @@ export const deleteAllOrdersForUser = async (userId) => {
   }
 };
 
+export const addProductToFirestore = async (product) => {
+  try {
+    const productsCol = collection(db, "products");
+    await setDoc(doc(productsCol), product);
+    console.log("Product added to Firestore.");
+  } catch (err) {
+    console.error("Error adding product:", err);
+  }
+};
+
+export const getAllFirestoreProducts = async () => {
+  try {
+    const productsCol = collection(db, "products");
+    const snapshot = await getDocs(productsCol);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (err) {
+    console.error("Error fetching products:", err);
+    return [];
+  }
+};
+
+export const deleteAllUserData = async (userId) => {
+  try {
+    await Promise.all([
+      deleteUserProfile(userId),
+      deleteAllOrdersForUser(userId),
+      deleteDoc(doc(db, "carts", userId)),
+    ]);
+    console.log("All data deleted for user", userId);
+  } catch (err) {
+    console.error("Error deleting all user data:", err);
+  }
+};
+

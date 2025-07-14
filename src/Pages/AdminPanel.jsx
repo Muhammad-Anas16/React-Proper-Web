@@ -33,7 +33,12 @@ import {
   getCarouselImages,
   setCarouselImages,
   deleteAllOrdersForUser,
+  addProductToFirestore,
 } from "../Firebase/firebaseFunctions";
+import { auth } from "../Firebase/Firebase";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router";
+import { deleteAllUserData } from "../Firebase/firebaseFunctions";
 
 const LOCAL_KEY = "admin_carousel_images";
 const ORDER_STATUSES = ["pending", "cancelled", "out of stock", "shipped", "delivered"];
@@ -59,6 +64,18 @@ const AdminPanel = () => {
   const [orders, setOrders] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [orderDialog, setOrderDialog] = useState({ open: false, userId: null });
+  const navigate = useNavigate();
+  const [deletingUserId, setDeletingUserId] = useState(null);
+
+  // Add Product state
+  const [productForm, setProductForm] = useState({
+    title: "",
+    price: "",
+    category: "",
+    description: "",
+    image: "",
+  });
+  const [addingProduct, setAddingProduct] = useState(false);
 
   // Load carousel images from Firestore
   useEffect(() => {
@@ -95,10 +112,16 @@ const AdminPanel = () => {
   // User management
   const handleDeleteUser = async (userId) => {
     if (!window.confirm("Delete this user and all their data?")) return;
-    await deleteUserProfile(userId);
-    await deleteAllOrdersForUser(userId);
+    setDeletingUserId(userId);
+    await deleteAllUserData(userId);
     setUsers(users.filter((u) => u.id !== userId));
     setOrders(orders.filter((o) => o.id !== userId));
+    setDeletingUserId(null);
+    // If the deleted user is the current user, log out and redirect
+    if (auth.currentUser && auth.currentUser.uid === userId) {
+      await signOut(auth);
+      navigate("/");
+    }
   };
 
   // Order management
@@ -129,6 +152,29 @@ const AdminPanel = () => {
           : o
       )
     );
+  };
+
+  const handleProductInput = (e) => {
+    const { name, value } = e.target;
+    setProductForm((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    setAddingProduct(true);
+    try {
+      const product = {
+        ...productForm,
+        price: parseFloat(productForm.price),
+        images: [productForm.image],
+        createdAt: new Date().toISOString(),
+      };
+      await addProductToFirestore(product);
+      setProductForm({ title: "", price: "", category: "", description: "", image: "" });
+      alert("Product added!");
+    } catch (err) {
+      alert("Error adding product");
+    }
+    setAddingProduct(false);
   };
 
   return (
@@ -204,6 +250,57 @@ const AdminPanel = () => {
         </List>
       </Paper>
 
+      {/* Add Product Section */}
+      <Paper sx={{ p: 3, borderRadius: 2, mb: 4 }}>
+        <Typography variant="h5" fontWeight={700} mb={2}>
+          Add Product
+        </Typography>
+        <form onSubmit={handleAddProduct}>
+          <Stack spacing={2}>
+            <TextField
+              label="Title"
+              name="title"
+              value={productForm.title}
+              onChange={handleProductInput}
+              required
+            />
+            <TextField
+              label="Price"
+              name="price"
+              type="number"
+              value={productForm.price}
+              onChange={handleProductInput}
+              required
+            />
+            <TextField
+              label="Category"
+              name="category"
+              value={productForm.category}
+              onChange={handleProductInput}
+              required
+            />
+            <TextField
+              label="Description"
+              name="description"
+              value={productForm.description}
+              onChange={handleProductInput}
+              multiline
+              rows={2}
+            />
+            <TextField
+              label="Image Link"
+              name="image"
+              value={productForm.image}
+              onChange={handleProductInput}
+              required
+            />
+            <Button type="submit" variant="contained" disabled={addingProduct}>
+              {addingProduct ? "Adding..." : "Add Product"}
+            </Button>
+          </Stack>
+        </form>
+      </Paper>
+
       {/* User Management */}
       <Paper sx={{ p: 3, borderRadius: 2, mb: 4 }}>
         <Typography variant="h5" fontWeight={700} mb={2}>
@@ -219,12 +316,17 @@ const AdminPanel = () => {
             <ListItem
               key={user.id}
               secondaryAction={
-                <IconButton edge="end" color="error" onClick={() => handleDeleteUser(user.id)}>
-                  <DeleteIcon />
+                <IconButton edge="end" color="error" onClick={() => handleDeleteUser(user.id)} disabled={deletingUserId === user.id}>
+                  {deletingUserId === user.id ? (
+                    <span className="loader" style={{ width: 20, height: 20, display: "inline-block" }} />
+                  ) : (
+                    <DeleteIcon />
+                  )}
                 </IconButton>
               }
               button
               onClick={() => handleOpenOrderDialog(user.id)}
+              disabled={deletingUserId === user.id}
             >
               <ListItemAvatar>
                 <Avatar src={user.data?.photoURL} />
@@ -322,4 +424,6 @@ const AdminPanel = () => {
   );
 };
 
-export default AdminPanel; 
+export default AdminPanel;
+
+<style>{`.loader { border: 2px solid #f3f3f3; border-top: 2px solid #DB4444; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; } @keyframes spin { 100% { transform: rotate(360deg); } }`}</style> 

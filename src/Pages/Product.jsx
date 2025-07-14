@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
 import { Stack, Pagination, PaginationItem } from "@mui/material";
-import { addToCart } from "../Firebase/firebaseFunctions";
+import { addToCart, getAllFirestoreProducts } from "../Firebase/firebaseFunctions";
 
 const Product = () => {
   const { category } = useParams();
   const [initialProducts, setInitialProducts] = useState(0); // Initial Products
   const [addProducts, setAddProducts] = useState(10); // Initial + 10 Products
   const [page, setPage] = useState(1); // Page number for pagination
+  const [firestoreProducts, setFirestoreProducts] = useState([]);
 
   const userLogin = useSelector((state) => state.IsLogin.IsLogin); // Checking User in Login or Not
-  const allProducts = useSelector(
-    (state) => state.customProducts.customProducts
-  ); // Custom hard Coded Products I store in Rudux
+  const reduxProducts = useSelector((state) => state.customProducts.customProducts);
+
+  useEffect(() => {
+    getAllFirestoreProducts().then((data) => {
+      setFirestoreProducts(data);
+    });
+  }, []);
+
+  // Merge Redux and Firestore products
+  const allProducts = [...firestoreProducts, ...reduxProducts];
 
   const filterCategory = allProducts.filter(
-    // if category passed if not show all produ0cts
     (item) => item?.category === category
   );
   const products = category
@@ -51,8 +58,6 @@ const Product = () => {
       console.error("Add to cart error:", err);
     }
   };
-
-  // console.log(page);
 
   const mode = useSelector((state) => state.theme.mode);
 

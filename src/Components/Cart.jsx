@@ -50,17 +50,17 @@ const Cart = () => {
   }, []);
 
   // Add a demo product to cart (for demonstration)
-  const handleAddToCart = async () => {
-    const demoProduct = {
-      id: "demo1",
-      title: "Demo Product",
-      price: 10,
-      image: "https://via.placeholder.com/50",
-      quantity: 1,
-    };
-    await addToCart(demoProduct);
-    fetchCart();
-  };
+  // const handleAddToCart = async () => {
+  //   const demoProduct = {
+  //     id: "demo1",
+  //     title: "Demo Product",
+  //     price: 10,
+  //     image: "https://via.placeholder.com/50",
+  //     quantity: 1,
+  //   };
+  //   await addToCart(demoProduct);
+  //   fetchCart();
+  // };
 
   // Delete a product from cart
   const handleDeleteFromCart = async (productId) => {
@@ -106,14 +106,14 @@ const Cart = () => {
         <Typography variant="h5" fontWeight={600}>
           Shopping Cart
         </Typography>
-        <Button
+        {/* <Button
           variant="contained"
           color="primary"
           startIcon={<AddShoppingCartIcon />}
           onClick={handleAddToCart}
         >
           Add Demo Product
-        </Button>
+        </Button> */}
       </Stack>
       {cartItems.length === 0 ? (
         <Typography textAlign="center" color="text.secondary">
